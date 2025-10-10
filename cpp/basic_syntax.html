@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Basic syntax</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/hexagone.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/code.css"/>
+  </head>
+  <body>
+    <textarea id="source">
+
+layout: true
+name: tplMain
+
+.footnote[
+M. Verrière - École Hexagone - 2025 - [![](../img/home_w.png)](../index.html#1)
+]
+
+---
+layout: true
+name: tplMainTop
+template: tplMain
+class: top
+
+---
+layout: true
+name: tplMainMiddle
+template: tplMain
+class: middle
+
+
+<!---------------------------------------------------------------------------->
+---
+layout: true
+template: tplMainTop
+name: syntax-variables
+
+# Syntax of `C++`: variables
+
+A variable is defined by its __type__ and its __name__.
+
+A variable named `name` of type `T` can be declared with the syntax
+```cpp
+T name;
+```
+
+In practice, it is always a good idea to initialize a variable directly
+```cpp
+ T name = value;
+```
+
+The name has to be __well-chosen__ to __concisely__ describe the __meaning__ of the variable.
+For example:
+
+---
+template: syntax-variables
+
+.row[
+.column.w70.middle[
+```cpp
+double r = 3.14159265358979;
+```
+]
+]
+
+---
+layout: true
+template: syntax-variables
+name: syntax-variables-1
+
+.row[
+.column.w70.middle[
+```cpp
+double r = 3.14159265358979;
+```
+]
+.column.w25.middle[
+.wrong[Wrong!]: no meaning.
+]
+]
+
+---
+template: syntax-variables-1
+
+.row[
+.column.w70.middle[
+```cpp
+double dbl_pi = 3.14159265358979;
+```
+]
+]
+
+---
+layout: true
+template: syntax-variables-1
+name: syntax-variables-2
+
+.row[
+.column.w70.middle[
+```cpp
+double dbl_pi = 3.14159265358979;
+```
+]
+.column.w25.middle[
+.wrong[Wrong!]: not concise.
+]
+]
+
+---
+template: syntax-variables-2
+
+.row[
+.column.w70.middle[
+```cpp
+double ratio_circumference_diameter_circle = 3.14159265358979;
+```
+]
+]
+
+---
+layout: true
+template: syntax-variables-2
+name: syntax-variables-3
+
+.row[
+.column.w70.middle[
+```cpp
+double ratio_circumference_diameter_circle = 3.14159265358979;
+```
+]
+.column.w25.middle[
+.wrong[Wrong!]: too verbose.
+]
+]
+
+
+---
+template: syntax-variable-3
+
+.row[
+.column.w70.middle[
+```cpp
+double pi = 3.14159265358979;
+```
+]
+]
+
+---
+template: syntax-variable-3
+name: syntax-variable-4
+
+.row[
+.column.w70.middle[
+```cpp
+double pi = 3.14159265358979;
+```
+]
+.column.w25.middle[
+.correct[Correct.]
+]
+]
+
+> 
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+
+# Syntax of `C++`: types
+
+A type fixes the range of values a variable can take.
+
+Scalar types:
+- integer types: `bool`, `char`, `short`, `int`, `long`, `long long`,
+- floating-point types: `float`, `double`, `long double`,
+- enumerations: `enum { ... }`.
+
+--
+
+<hr/>
+
+Pointer to a variable of type `T`: `T *`.
+
+--
+
+<hr/>
+
+References (alias) to a type `T`:
+- l-value: `T &`,
+- r-value: `T &&`.
+
+--
+
+<hr/>
+
+Aggregate types:
+- plain old data (POD) arrays of type `T`: `T[N]`, `T[]`,
+- structures: `struct { ... };`, `class { ... };`.
+
+--
+
+<hr/>
+
+CV-qualifiers:
+- constant (cannot be modified): `const`,
+- volatile (can be modified externally): `volatile`,
+
+--
+
+<hr/>
+Other types:
+- unions: `union { ... }`.
+- function pointers: `return_type (*) (type_arg1 arg1, type_arg2 arg2, ...)`,
+- unit type (aka void type): `void`.
+
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+
+# Syntax of `C++`: types
+
+What is the value of pi?
+.row[
+.column.w70.middle[
+```cpp
+int pi=3.14159265358979;
+```
+]
+]
+
+---
+template: tplMainTop
+name: syntax-type-ex
+
+# Syntax of `C++`: types
+
+What is the value of pi?
+.row[
+.column.w70.middle[
+```cpp
+int pi=3.14159265358979;
+```
+]
+.column.w25.middle[
+.wrong[The integer 3!]
+]
+]
+
+---
+template: syntax-type-ex
+
+Is this code valid?
+.row[
+.column.w70.middle[
+```cpp
+std::cout &lt;&lt; pi &lt;&lt; std::endl;
+int pi=3.14159265358979;
+```
+]
+]
+
+---
+template: syntax-type-ex
+
+Is this code valid?
+.row[
+.column.w70.middle[
+```cpp
+std::cout &lt;&lt; pi &lt;&lt; std::endl;
+int pi=3.14159265358979;
+```
+]
+.column.w25.middle[
+.wrong[No!] `pi` read before its declaration.
+]
+]
+
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+
+# Union and aggregate types
+
+C++ has an extendable type system, which enables deriving new types from the
+ones already presented.
+
+They are decomposed into two categories:
+- the conjunction/product/aggregate types, creating a new type by joining several types, e.g.,
+  ```cpp
+  struct { int a; float b; } s;
+  s.a = 42; // Set the first member of s
+  u.b = 73.0f; // Set the second member of s
+  std::cout &lt;&lt; u.a &lt;&lt; std::endl; // Read first member of s, prints 42
+  std::cout &lt;&lt; u.b &lt;&lt; std::endl; // Read second member of s, prints 73.0
+  ```
+- the disjunction/sum/union types, which associate several types to one variable, e.g.,
+  ```cpp
+  union { int a; float b; } u;
+  u.a = 42; // Set u as an integer
+  u.b = 73.0f; // Set u as a float
+  std::cout &lt;&lt; u.a &lt;&lt; std::endl; // UB! (but often used for type punning)
+  std::cout &lt;&lt; u.b &lt;&lt; std::endl; // Valid
+  ```
+  Union types are useful, e.g., when one member of a structure can differ according to a condition:
+  ```cpp
+  enum protocol_t { TCP, UDP };
+  struct tcp_desc_t;
+  struct udp_desc_t;
+  struct socket_t
+  {
+      enum protocol_t protocol;
+      union { tcp_desc_t tcp; udp_desc_t udp } descriptor;
+  };
+  ```
+
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+
+# Literals
+
+## Integers
+```cpp
+int ten = 10; // decimal literal
+int eight = 010; // octal literal
+int sixteen = 0x10; // hexadecimal literal
+int two = 0b10; // binary literal
+int pow_2_31_fail = 2147483648; // pow_2_31_fail == -2147483648. Why?
+unsigned int pow_2_31 = 2147483648u;
+long int pow_2_50 = 1125899906842624l; // long literal
+long long int pow_2_50 = 1125899906842624ll; // long long literal
+```
+
+--
+
+## Booleans
+```cpp
+bool is_cpp_fantastic = true;
+bool is_asm_readable = false;
+```
+
+--
+
+## Floating-points
+```cpp
+float e=2.71828f;
+double pi=3.14159;
+long double pi_high_prec=3.141592653589793238462643383279502884l;
+long double chance_to_win_french_lottery=7.149590013910243e-08;
+```
+
+--
+
+## Characters and strings
+```cpp
+char a='a'; // Single quotes
+const char *language="c++"; // double quotes
+const char std[]="c++17"; // double quotes
+const char compiler[]={'g', 'c', 'c', '\0'}; // compiler == "gcc"
+```
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+name: arithmetic-operators
+
+# Arithmetic operators
+
+Syntax | Operation      | Precedence | Signature
+:----- | :------------- | :--------: | :----------
+`+a`   | Unary plus     | 3          | `T operator+(const T &a);`
+`-a`   | Unary minus    | 3          | `T operator-(const T &a);`
+`a+b`  | Addition       | 6          | `T operator+(const T& a, const T2& b);`
+`a-b`  | Subtraction    | 6          | `T operator-(const T& a, const T2& b);`
+`a*b`  | Multiplication | 5          | `T operator*(const T& a, const T2& b);`
+`a/b`  | Division       | 5          | `T operator/(const T& a, const T2& b);`
+`a%b`  | Modulo         | 5          | `T operator%(const T& a, const T2& b);`
+`++a`  | Pre-increment  | 3          | `T& operator++(T& a);`
+`a++`  | Post-increment | 2          | `T operator++(T& a, int);`
+`--a`  | Pre-decrement  | 3          | `T& operator--(T& a);`
+`a--`  | Post-decrement | 2          | `T operator--(T& a, int);`
+
+---
+template: arithmetic-operators
+
+What is the value of `x`?
+```cpp
+int x=2 + 3 * 5 / 4;
+```
+
+---
+template: arithmetic-operators
+name: arithmetic-operators-1
+What is the value of `x`?
+```cpp
+int x=2 + 3 * 5 / 4; // x==2 + ((3 * 5) / 4), x==5.
+```
+
+---
+template: arithmetic-operators-1
+```cpp
+int y=2; int x=++y;
+```
+
+---
+template: arithmetic-operators-1
+name: arithmetic-operators-2
+```cpp
+int y=2; int x=++y; // x==3, y==3.
+```
+
+---
+template: arithmetic-operators-2
+```cpp
+int y=2; int x=y--;
+```
+
+---
+template: arithmetic-operators-2
+name: arithmetic-operators-3
+```cpp
+int y=2; int x=y--; // x==2, y==1.
+```
+
+---
+template: arithmetic-operators-3
+```cpp
+int y=2; int x=++y--;
+```
+
+---
+template: arithmetic-operators-3
+name: arithmetic-operators-4
+```cpp
+int y=2; int x=++y--; // FAIL: Post-increment has priority and returns a value!
+```
+
+---
+template: arithmetic-operators-3
+```cpp
+int y=2; int x=(++y)--;
+```
+
+---
+template: arithmetic-operators-3
+name: arithmetic-operators-4
+```cpp
+int y=2; int x=(++y)--; // VALID! Pre-increment returns a reference. x==3, y==2.
+```
+
+
+
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+name: assignment-operators
+
+# Assignment operators
+
+Syntax | Operation                 | Precedence |Signature
+:----- | :------------------       | :--------: |:----------
+`a=b`  | Simple assignment         | 16         |`T& operator =(T& a, const T2& b);`
+`a+=b` | Addition assignment       | 16         |`T& operator +=(T& a, const T2& b);`
+`a-=b` | Subtraction assignment    | 16         |`T& operator -=(T& a, const T2& b);`
+`a*=b` | Multiplication assignment | 16         |`T& operator *=(T& a, const T2& b);`
+`a/=b` | Division assignment       | 16         |`T& operator /=(T& a, const T2& b);`
+`a%=b` | Remainder assignment      | 16         |`T& operator %=(T& a, const T2& b);`
+
+---
+template: assignment-operators
+
+What is the value of `x`?
+```cpp
+int x=0, y=1; x+=y*=2;
+```
+
+---
+template: assignment-operators
+name: assignment-operators-1
+
+What is the value of `x`?
+```cpp
+int x=0, y=1; x+=y*=2; // x+=(y*=2) => y==2, x==2.
+```
+
+---
+template: assignment-operators-1
+
+```cpp
+int x=1, y=2; x*=y+=2;
+```
+
+---
+template: assignment-operators-1
+name: assignment-operators-2
+
+```cpp
+int x=1, y=2; x*=y+=2; // x*=(y+=2) => y==4, x==4.
+```
+
+
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+
+# Comparison operators
+
+Syntax    | Operation                 | Precedence |Signature
+:-------- | :------------------       | :--------: |:----------
+`a==b`    | Equal to                  | 10         | `bool operator==(const T& a, const U& b);`
+`a!=b`    | Not equal to              | 10         | `bool operator!=(const T& a, const U& b);`
+`a&lt;b`  | Less than                 | 9          | `bool operator&lt;(const T& a, const U& b);`
+`a&lt;=b` | Less than or equal to     | 9          | `bool operator&lt;=(const T& a, const U& b);`
+`a&gt;b`  | Greater than              | 9          | `bool operator&gt;(const T& a, const U& b);`
+`a&gt;=b` | Greater than or equal to  | 9          | `bool operator&gt;=(const T& a, const U& b);`
+
+--
+
+```cpp
+bool cond=2==2.0; // cond == true;
+```
+
+--
+
+```cpp
+int a=2;
+bool cond=a>5; // false
+```
+
+--
+
+```cpp
+bool cond=2!=2.0+1.0e-10; // cond == true;
+```
+
+--
+
+```cpp
+bool cond=2==2.0+1.0e-17; // Undefined behavior, aka, UB! (but true most of the time);
+```
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+
+# Logical operators
+
+Syntax    | Operation    | Precedence |Signature
+:-------- | :----------- | :--------: |:----------
+`!a`      | Negation     | 3          | `bool operator!(const T &a);`
+`a && b`  | And          | 14         | `bool operator&&(const T &a, const T2 &b);`
+`a ││ b`  | Inclusive or | 15         | `bool operator││(const T &a, const T2 &b);`
+
+--
+
+```cpp
+a &gt; 4 && a &lt; 10;
+```
+
+--
+
+```cpp
+a &lt;= 4 || a &gt;= 10;
+```
+
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+
+# Control flow statements 
+
+They enable the developer to control the order in which the instructions are executed in a program.
+
+--
+
+## Conditional statements:
+
+| Construction | Syntax
+| :----------- | :-----
+| if-then      |`if(COND) BLOCK`
+| if-then-else |`if(COND) BLOCK1 else BLOCK2`
+| switch-case  |`switch(EXPR) { case LITERAL1: BLOCK1 ... default: BLOCK0 }`
+
+
+--
+
+.row[Examples:]
+
+.row[
+.column.w70[
+```cpp
+// Test the validity of probability
+double probability = ...;
+if (probability &lt; 0.0 || probability &gt; 1.0)
+{
+  throw std::range_error("Error: probability out-of-range");
+}
+```
+].column.w25[
+```cpp
+// Computes y = |x|
+double x=..., y=0.0;
+if (x &gt;= 0.0)
+  y = x;
+else
+  y = -x;
+```
+]]
+
+--
+
+```cpp
+// Compute y = 1 / (x*x-1)
+int x = ...;
+double y = 0.0;
+switch(x)
+{
+  case 1:
+  case -1:
+    throw std::range_error("1 / (x*x-1) is undefined.");
+  default:
+    y = 1.0 / (x*x-1.0);
+}
+
+```
+
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+
+# Control flow statements 
+
+They enable the developer to control the order in which the instructions are executed in a program.
+
+## Loops:
+
+.row[
+.column.w50[
+| Construction | Syntax
+| :----------- | :-----
+| for-loop     |`for(INIT; COND; INC) BLOCK`
+| while-loop   |`while(COND) BLOCK`
+| do-while-loop |`do BLOCK while(COND)`
+].column.w45[
+| Construction | Syntax
+| :----------- | :-----
+| break        | `break`
+| continue     | `continue`
+]
+]
+
+--
+
+.row[Examples:]
+
+```cpp
+// Compute first thousand primes
+unsigned int primes[1000] = {0};
+primes[0] = 2;
+unsigned int n_primes = 1;
+unsigned int current = 3;
+// Loop upon finding the first 1000 primes
+while (n_primes &lt; 1000)
+{
+  // Test if `current` is coprime with all known primes
+  for (unsigned int i = 0; i &lt; n_primes; ++i)
+    if (current % primes[i] == 0)
+    {
+      // current is divisible by the i-th prime!
+      primes[n_primes++] = current;
+      break; // Exit the for loop
+    }
+  ++current;
+}
+```
+
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+
+# Functions
+
+A function transforms a set of arguments into a return value. For example:
+```cpp
+// return the sum of lhs and rhs
+int add (int lhs, int rhs)
+{
+  return lhs + rhs;
+}
+```
+
+--
+
+They can also have side effects. For example:
+```cpp
+// print the result on screen
+void print_sum (int lhs, int rhs)
+{
+  std::cout &lt;&lt; lhs + rhs &lt;&lt; std::endl;
+}
+```
+
+--
+
+Recursive functions are completely supported:
+```cpp
+// Calculate the Fibonacci sequence
+int fibonacci(int n)
+{
+  if (n &lt; 0)
+    throw std::range_error("The Fibonacci sequence is not defined on negative numbers.");
+  if (n &lt; 2) return n;
+  return fibonacci(n-1) + fibonacci(n-2);
+}
+```
+
+<!---------------------------------------------------------------------------->
+---
+template: tplMainTop
+
+# Function overloads
+
+Several functions can share the same name as long as they have different argument types:
+```cpp
+unsigned int add(unsigned int lhs, unsigned int rhs)
+{
+  return lhs + rhs;
+}
+float add(float lhs, float rhs) // OK: lhs and/or rhs have different types
+{
+  return lhs + rhs;
+}
+```
+
+---
+template: tplMainTop
+
+# Function overloads
+
+Several functions can share the same name as long as they have different argument types:
+```cpp
+unsigned int add(unsigned int lhs, unsigned int rhs)
+{
+  return lhs + rhs;
+}
+float add(float lhs, float rhs) // OK: lhs and/or rhs have different types
+{
+  return lhs + rhs;
+}
+*float add(unsigned int lhs, unsigned int rhs) // Not valid: only the return type is different.
+*{
+*  return lhs + rhs;
+*}
+```
+
+--
+
+Indeed, all operators we have seen so far are functions, and can be overloaded! Example:
+
+```cpp
+struct color_t { int red; int green; int blue; };
+
+color_t operator+(const color_t &lhs, const color_t &rhs)
+{
+  return { lhs.red+rhs.red, lhs.green+rhs.green, lhs.blue+rhs.blue };
+}
+
+int main(int argc, char *argv[])
+{
+  color_t blue = {0, 0, 127};
+  color_t red = {127, 0, 0};
+  color_t purple = red + blue;
+}
+```
+
+    </textarea>
+    <script src="../javascript/remark.min.js"></script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai',
+        countIncrementalSlides: false,
+        highlightLines: true,
+        highlightSpans: false
+      });
+    </script>
+  </body>
+</html>

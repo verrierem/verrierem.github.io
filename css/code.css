@@ -1,0 +1,152 @@
+/* ====================== */
+/* ======== code ======== */
+/* ====================== */
+
+.numbers .remark-code {
+  counter-reset: line;
+}
+
+.numbers .remark-code-line {
+  counter-increment: line;
+  text-indent: -1.9em;
+  padding-left: 1.9em;
+}
+
+/*
+.remark-code-line:nth-of-type(even) {
+      background-color:#222;
+}
+*/
+
+.numbers .remark-code-line::before {
+  content: counter(line, decimal-leading-zero);
+  border-right: 1px solid rgba(160, 100, 100, 1);
+  color: rgba(160, 100, 100, 1);
+  margin-right: 0.3em;
+  box-sizing: border-box;
+  padding-right: 0.3em;
+}
+
+.numbers .remark-code-line::before {
+  -webkit-user-select: none;
+}
+
+/* ==================================== */
+/* === code highlight on mouse over === */
+/* ==================================== */
+
+.numbers .remark-code-line:hover::before {
+  background-color: rgba(255, 0, 0, 1);
+  color: rgba(255, 255, 255, 1);
+  transition: all 0s ease;
+}
+
+.remark-code-line {
+  transition: background-color 0.3s ease;
+}
+
+.remark-code-line:hover {
+  background-color: rgba(100,0,0,1);
+  transition: background-color 0s ease;
+}
+
+/* ==================================== */
+/* ==================================== */
+/* ==================================== */
+
+/* in case of no numbering
+div.remark-code-line:empty::before {
+    content: "\200b";
+}
+*/
+
+.remark-inline-code {
+  box-shadow: none;
+}
+
+.remark-code-line-highlighted {
+  background-color: rgba(113, 0, 116, 1);
+}
+
+.f9, #terminal, .remark-code, .hljs.remark-code, .cinescript {
+  color: #FFFFFF;
+  /*font-family: mymono;*/
+  font-size: 0.80em;
+  line-height: 118%;
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+}
+
+.terminal {
+  /*font-family: mymono;*/
+}
+
+#terminal, .remark-code, .hljs.remark-code, .cinescript {
+  background-color: rgba(0,0,0,0.9);
+}
+
+#terminal, code, .remark-code, .cinescript, .hljs.remark-code, .asciinema-terminal {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  box-sizing: border-box;
+  padding: 0.3em;
+}
+
+.nowrap #terminal, .nowrap code, .nowrap .remark-code, .nowrap .cinescript, .nowrap .hljs.remark-code, .asciinema-terminal {
+  white-space: pre;
+}
+
+.remark-inline-code {
+  font-size: 1.0em;
+  padding: 0em;
+  font-weight: bold;       
+}
+
+h1 > code.remark-inline-code {
+  color: rgba(255, 210, 210, 1.0);
+}
+
+h1 > code.remark-inline-code.has-jax {
+  color: rgba(255, 255, 255, 1.0);
+}
+
+.remark-code {
+  display: block;
+}
+
+/* ================================= */
+/* ======== terminal colors ======== */
+/* ================================= */
+
+.reset     {color: white;}
+.bg-reset  {}
+.dimgray   {color: rgba( 80,  80,  80, 1);}
+.red       {color: rgba(255,  65,  65, 1);}
+.green     {color: rgba(  0, 170,   0, 1);}
+.yellow    {color: rgba(255, 141,  26, 1);}
+.blue      {color: rgba(154, 154, 255, 1);}
+.purple    {color: rgba(255,  85, 255, 1);}
+.cyan      {color: rgba(  0, 224, 224, 1);}
+.white     {color: rgba(255, 255, 255, 1);}
+.bg-black  {background-color: rgba(  0,   0,   0, 0);}
+.bg-red    {background-color: rgba(255,  65,  65, 1);}
+.bg-green  {background-color: rgba(  0, 170,   0, 1);}
+.bg-yellow {background-color: rgba(255, 141,  26, 1);}
+.bg-blue   {background-color: rgba(154, 154, 255, 1);}
+.bg-purple {background-color: rgba(255,  85, 255, 1);}
+.bg-cyan   {background-color: rgba(  0, 224, 224, 1);}
+.bg-white  {background-color: rgba(255, 255, 255, 1);}
+.underline {text-decoration: underline;}
+.bold      {font-weight: bold;}
+.blink     {text-decoration: blink;}
+
+/* ========================= */
+/* ======== corners ======== */
+/* ========================= */
+
+.alert, .block, #terminal, code, .remark-code, .cinescript {
+  border-radius: 0.4em;
+}
+
+

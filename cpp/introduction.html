@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/hexagone.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/code.css"/>
+  </head>
+  <body>
+    <textarea id="source">
+
+layout: true
+name: tplMain
+
+.footnote[
+M. Verrière - École Hexagone - 2025 - [![](../img/home_w.png)](../index.html#1)
+]
+
+---
+layout: true
+name: tplMainTop
+template: tplMain
+class: top
+
+
+
+---
+layout: true
+name: tplMainMiddle
+template: tplMain
+class: middle
+
+---
+template: tplMainMiddle
+
+.title[Introduction to the C++ programming language]
+
+.subtitle[M. Verriere - Ecole Hexagone - 2025]
+
+
+---
+template: tplMainMiddle
+
+# Author
+
+## M. Verrière
+
+- __Job__: researcher at the CEA (french alternative energies and atomic energy commission).
+- __Field__: mainly theoretical nuclear physics, but also computer scientist (theoretical and practical).
+
+---
+template: tplMainTop
+
+# Context
+
+## What is C++?
+
+--
+
+It is a __programming language__.
+
+--
+
+## What is a __programming language__?
+
+--
+
+It is a way to write programs (a sequence of instructions), in our case to execute it on a computer.
+
+
+---
+name: tmplComputer
+template: tplMainTop
+
+# Context
+
+## What is C++?
+
+
+It is a __programming language__.
+
+
+## What is a __programming language__?
+
+
+It is a way to write programs (a sequence of instructions), in our case to execute it on a computer.
+
+
+## What is a __computer__?
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computer0.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computer1.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computer2.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computer3.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computer4.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computer5.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computer6.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computercpp0.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computercpp1.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computercpp2.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computercpp3.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computercpp4.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computercpp5.png)]
+
+
+---
+template: tmplComputer
+
+.anim-computer[![](../img/computercpp6.png)]
+
+
+---
+template: tplMainTop
+
+# A bit of history
+.history[
+| Year  | Event |
+| ----: | :--- |
+| 2500 BC | First known algorithm (a division algorithm). |
+| 1947  | First assembly code. |
+| 1948  | First electronic stored-program computer, the Small-Scale Experimental Machine (SSEM). |
+| 1954  | First assembler program. |
+| 1967  | Creation of the Basic Combined Programming Language, `BCPL` (Martin Richards). |
+| 1969  | Creation of the `B` programming language (Bell labs, D. Ritchie, K. Thompson). |
+| 1972  | Creation of the `C` programming language (Bell labs, D. Ritchie, K. Thompson). |
+| 1979  | `C` with Classes (Bell labs, Bjarne Stroustrup). |
+| 1985  | First edition of `The C++ Programming Language`. |
+| 1998  | `C++` standardization. |
+| 2011  | Release of the `C++11` standard. |
+| 2014  | Release of the `C++14` standard. |
+| 2017  | Release of the `C++17` standard. |
+| 2020  | Release of the `C++20` standard. |
+| 2023  | Release of the `C++23` standard. |
+| 2026  | Release of the `C++26` standard. |
+]
+---
+template: tplMainMiddle
+
+
+# Hello, World!
+
+```cpp
+#include &lt;iostream&gt;
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+  cout &lt;&lt; "Hello, World!" &lt;&lt; endl;
+  return 0;
+}
+
+```
+
+---
+template: tplMainMiddle
+
+# Hello, World!
+
+```cpp
+/* Simple Hello, World! */
+
+// Enable I/O library
+#include &lt;iostream&gt;
+
+// Not recommended, render "std::" optional.
+using namespace std;
+
+// Entry point of the program.
+/* argc Number of arguments in the CLI
+ * argv C-style array of C-style null-terminated strings
+ * return Success code
+ */
+
+int main(int argc, char *argv[])
+{
+  // Print Hello, World! on screen.
+  cout &lt;&lt; "Hello, World!" &lt;&lt; endl;
+
+  // Return from the `main` function means exiting the program.
+  return 0;
+}
+
+```
+
+---
+template: tplMainMiddle
+
+# Why to use `C++`?
+
+- It is a __broadly used cross-platform__ programming language, which
+  - stays in the top-5 languages of the [TIOBE](https://www.tiobe.com/tiobe-index/) index since at least 25 years ;
+  - can run on a large range of computer architectures, from embedded systems to supercomputers ;
+  - keeps being maintained and evolving.
+- It gives a __lot of control__ to the programmer
+  - e.g., several parts of Windows itself are written in `C++` ;
+  - it gives a direct access to the resources and memory.
+- __Huge, evolving standard library__ (`stdlib`) with a great [documentation](https://www.cppreference.com/) which enables
+  - high-level programming, without bothering with implementation details ;
+  - write modular codes.
+- It embeds a __very powerful__ Turing-complete __template system__
+  - the code can be very generic yet optimized ;
+  - enables __metaprogramming__.
+
+
+    </textarea>
+    <script src="../javascript/remark.min.js"></script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai',
+        countIncrementalSlides: false,
+        highlightLines: true,
+        highlightSpans: false
+      });
+    </script>
+  </body>
+</html>

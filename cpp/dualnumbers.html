@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Project</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/hexagone.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/code.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/katex.min.css"/>
+  </head>
+  <body>
+    <textarea id="source" readonly>
+
+layout: true
+name: tplMain
+
+.footnote[
+M. Verrière - École Hexagone - 2025 - [![](../img/home_w.png)](../index.html#1)
+]
+
+---
+layout: true
+name: tplMainTop
+template: tplMain
+class: top
+
+---
+layout: true
+name: tplMainMiddle
+template: tplMain
+class: middle
+
+---
+template: tplMainTop
+
+# An hypercomplex algebra
+
+Dual numbers are an extension of real numbers. They are defined in a way
+analogous to the complex numbers `$\mathbb{C}$` by adding a nonreal element
+`$\varepsilon$` that satisfies
+
+`$$\varepsilon^2 = 0.$$`
+
+Similarly to the complex numbers, they form a commutative algebra of dimension
+two over the real numbers. Hence, any dual number `$\mu = a + b\varepsilon$`
+can be decomposed into a real part `$a$` and an imaginary part `$b$`.
+These properties enable the determination of the following rules:
+
+| Operation      | Equation
+| :------------- | :-------
+| Addition       | `$(a + b\varepsilon) + (c + d\varepsilon) = (a+c) + (b+d)\varepsilon.$`
+| Subtraction    | `$(a + b\varepsilon) - (c + d\varepsilon) = (a-c) + (b-d)\varepsilon.$`
+| Multiplication | `$(a + b\varepsilon)(c + d\varepsilon) = (ac) + (ad+bc)\varepsilon.$`
+| Division       | `$\frac{a + b\varepsilon}{c + d\varepsilon} = \frac{a}{c} + \frac{bc-ad}{c^2}\varepsilon.$`
+
+--
+
+## Tasks
+1. Define a type for the dual numbers.
+1. Overload the arithmetic operators `+`, `-`, `*`, `/` to implement these operations.
+1. Create an overloaded exponential function working on `double` and dual numbers.
+  - Hint: use the Taylor expansion of the exponential function.
+1. Collectively: interpret the meaning of this algebra.
+
+---
+template: tplMainTop
+
+# An hypercomplex algebra
+
+Dual numbers are an extension of real numbers. They are defined in a way
+analogous to the complex numbers `$\mathbb{C}$` by adding a nonreal element
+`$\varepsilon$` that satisfies
+
+`$$\varepsilon^2 = 0.$$`
+
+Similarly to the complex numbers, they form a commutative algebra of dimension
+two over the real numbers. Hence, any dual number `$\mu = u + u'\varepsilon$`
+can be decomposed into a real part `$u$` and an imaginary part `$u'$`.
+These properties enable the determination of the following rules:
+
+| Operation      | Equation
+| :------------- | :-------
+| Addition       | `$(u + u'\varepsilon) + (v + v'\varepsilon) = (u+v) + (u'+v')\varepsilon.$`
+| Subtraction    | `$(u + u'\varepsilon) - (v + v'\varepsilon) = (u-v) + (u'-v')\varepsilon.$`
+| Multiplication | `$(u + u'\varepsilon)(v + v'\varepsilon) = (uv) + (uv'+u'v)\varepsilon.$`
+| Division       | `$\frac{u + u'\varepsilon}{v + v'\varepsilon} = \frac{u}{v} + \frac{u'v-uv'}{v^2}\varepsilon.$`
+
+--
+
+## Tasks
+1. Define a type for the dual numbers.
+1. Overload the arithmetic operators `+`, `-`, `*`, `/` to implement these operations.
+1. Create an overloaded exponential function working on `double` and dual numbers.
+  - Hint: use the Taylor expansion of the exponential function.
+1. Collectively: interpret the meaning of this algebra.
+
+
+    </textarea>
+    <script src="../javascript/remark.min.js"></script>
+    <script src="../javascript/katex.min.js"></script>
+    <script src="../javascript/auto-render.min.js"></script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai',
+        countIncrementalSlides: false,
+        highlightLines: true,
+        highlightSpans: false
+      });
+
+      // KaTex rendering
+      renderMathInElement(
+              document.body,
+              {
+                      delimiters: [
+                              {left: "$$", right: "$$", display: true},
+                              {left: "$", right: "$", display: false},
+                              {left: "\\(", right: "\\)", display: false}],
+                      ignoredTags: []
+              });
+    </script>
+  </body>
+</html>

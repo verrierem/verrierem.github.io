@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The C++ Programming Language</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="css/hexagone.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/custom.css"/>
+  </head>
+  <body>
+    <textarea id="source">
+
+layout: true
+name: tplMain
+
+.footnote[
+M. Verrière - École Hexagone - 2025 - [![](img/home_w.png)](index.html)
+]
+
+---
+layout: true
+name: tplMainTop
+template: tplMain
+class: top
+
+---
+layout: true
+name: tplMainMiddle
+template: tplMain
+class: middle
+
+
+---
+template: tplMainMiddle
+
+# The C++ Programming Language
+
+## Content
+1. [Introduction](cpp/introduction.html): context, first program and toolchain.
+1. [Basic syntax](cpp/basic_syntax.html): variables, types, operators, scope, flow control statements, function calls, C preprocessor, ...
+1. [Project presentation](cpp/dualnumbers.html): Dual numbers algebra
+1. [Advanced syntax](cpp/advanced_syntax.html): pointers, memory management, ...
+1. [C++ Standard Library](cpp/stdlib.html): The good way.
+1. [Object-oriented concepts](cpp/objects.html): Encapsulation, inheritance, virtual classes, polymorphism...
+1. [Templates](cpp/templates.html): A short introduction to metaprogramming.
+1. [Metaprogramming](cpp/metaprogramming.html): A short introduction to metaprogramming.
+
+## References
+- The C++ Bible: [cppreference](https://en.cppreference.com)
+  ([Basic concepts](https://en.cppreference.com/w/cpp/language/basics.html),
+   [C++ Standard Library](https://en.cppreference.com/w/cpp/standard_library.html),
+   ...)
+- Compilers:
+    [GNU Compiler Collection (GCC)](https://gcc.gnu.org/),
+    [Clang](https://clang.llvm.org/),
+    [Intel C++ Compiler](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html)
+- Text editors/IDE:
+    [Vim](https://www.vim.org/),
+    [NeoVim](https://neovim.io/),
+    [Visual Studio](https://visualstudio.microsoft.com/)
+- Version control systems:
+    [Git](https://git-scm.com/),
+    [SVN](https://subversion.apache.org/)
+- Unit test suites:
+    [GoogleTest](http://google.github.io/googletest/),
+    [CTest](https://cmake.org/cmake/help/latest/manual/ctest.1.html),
+    [Boost.Test](https://www.boost.org/doc/libs/1_89_0/libs/test/doc/html/index.html)
+- Static Analysis Tools (linters, typecheckers, etc):
+    [Clang-tidy](https://clang.llvm.org/extra/clang-tidy/),
+    [CppCheck](https://cppcheck.sourceforge.io/)
+- Dynamic Analysis Tools (debbugers and profilers):
+    [GNU DeBugger (GDB)](https://www.sourceware.org/gdb/),
+    [Valgrind](https://valgrind.org/),
+    [perf](https://perfwiki.github.io/main/),
+    [TAU](https://www.cs.uoregon.edu/research/tau/home.php)
+- [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install)
+
+---
+template: tplMainMiddle
+
+# Appendices
+
+1. [Linux](cpp/linux.html): How to use it.
+1. [Compilers](cpp/compilers.html): A non-exhaustive list, with a focus on GCC.
+1. [Dev. tools](cpp/devtools.html): IDE, vim, etc.
+1. [Test suites](cpp/testsuites.html): How to ensure it does what we think it does.
+
+
+    </textarea>
+    <script src="javascript/remark.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai',
+        countIncrementalSlides: false,
+        highlightLines: false
+      });
+    </script>
+  </body>
+</html>

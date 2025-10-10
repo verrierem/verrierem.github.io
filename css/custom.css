@@ -1,0 +1,26 @@
+.anim-computer img {
+  box-sizing: border-box;
+  display: block;
+  margin: auto;
+  width: 55%;
+}
+
+.cpp-history
+.cpp-history table td:nth-child(1)
+{
+  width: 10%;
+}
+.cpp-history table td:nth-child(2)
+{
+  width: 50%;
+}
+.wrong {
+  text-align: center;
+  font-weight: bold;
+  color: rgba(255, 0, 0, 1.0);
+}
+.correct {
+  text-align: center;
+  font-weight: bold;
+  color: rgba(0, 255, 0, 1.0);
+}
