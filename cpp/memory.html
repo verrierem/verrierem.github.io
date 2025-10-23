@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Memory management</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/hexagone.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/code.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/katex.min.css"/>
+  </head>
+  <body>
+    <textarea id="source" readonly>
+
+layout: true
+name: tplMain
+
+.footnote[
+M. Verrière - École Hexagone - 2025 - [![](../img/home_w.png)](../index.html#1)
+]
+
+---
+layout: true
+name: tplMainTop
+template: tplMain
+class: top
+
+---
+layout: true
+name: tplMainMiddle
+template: tplMain
+class: middle
+
+---
+template: tplMainTop
+
+# Memory layout
+
+.anim-memory[![](../img/memory-0.png)]
+
+---
+template: tplMainTop
+
+# Memory layout
+
+.anim-memory[![](../img/memory-1.png)]
+
+---
+template: tplMainTop
+
+# Memory layout
+
+.anim-memory[![](../img/memory-2.png)]
+
+---
+template: tplMainTop
+
+# Memory layout
+
+.anim-memory[![](../img/memory-3.png)]
+
+---
+template: tplMainTop
+
+# Memory layout
+
+.anim-memory[![](../img/memory-4.png)]
+
+---
+template: tplMainTop
+
+# Memory layout
+
+.anim-memory[![](../img/memory-5.png)]
+
+```
+address: 
+```
+---
+template: tplMainTop
+
+# Memory layout
+
+.anim-memory[![](../img/memory-6.png)]
+
+```
+address: 0x0180 +
+```
+---
+template: tplMainTop
+
+# Memory layout
+
+.anim-memory[![](../img/memory-7.png)]
+```
+address: 0x0180 + 0x08 = 0x0188
+```
+
+---
+template: tplMainTop
+
+# Taking the address of a variable
+
+```cpp
+int  i = 2;
+
+int *address_of_i = &amp;i; // *pointer* to the memory location of `i`
+
+std::cout &lt;&lt; "i: " &lt;&lt; i &lt;&lt; ", address_of_i: " &lt;&lt; address_of_i &lt;&lt; std::endl;
+```
+
+Output:
+
+--
+```
+i: 2, address_of_i: 0x7ffd53eb8dcc
+```
+
+---
+template: tplMainTop
+
+# Pointer dereferencing
+
+```cpp
+int  i = 2;
+int *address_of_i = &amp;i; // *pointer* to the memory location of `i`
+std::cout &lt;&lt; "i: " &lt;&lt; i &lt;&lt; ", address_of_i: " &lt;&lt; address_of_i &lt;&lt; std::endl;
+
+**address_of_i += 1;
+
+std::cout &lt;&lt; "i: " &lt;&lt; i &lt;&lt; ", address_of_i: " &lt;&lt; address_of_i &lt;&lt; std::endl;
+```
+
+Output:
+
+--
+```
+i: 2, address_of_i: 0x7ffd53eb8dcc
+i: 3, address_of_i: 0x7ffd53eb8dcc
+```
+
+
+---
+template: tplMainTop
+
+# Pointers as arrays
+
+```cpp
+int  i = 2;
+int *address_of_i = &amp;i; // *pointer* to the memory location of `i`
+std::cout &lt;&lt; "i: " &lt;&lt; i &lt;&lt; ", address_of_i: " &lt;&lt; address_of_i &lt;&lt; std::endl;
+
+*address_of_i[0] += 1;
+
+std::cout &lt;&lt; "i: " &lt;&lt; i &lt;&lt; ", address_of_i: " &lt;&lt; address_of_i &lt;&lt; std::endl;
+```
+
+Output:
+
+--
+```
+i: 2, address_of_i: 0x7ffd53eb8dcc
+i: 3, address_of_i: 0x7ffd53eb8dcc
+```
+
+---
+template: tplMainTop
+
+# Pointers as arrays
+
+```cpp
+int  i = 2;
+int *address_of_i = &amp;i; // *pointer* to the memory location of `i`
+std::cout &lt;&lt; "i: " &lt;&lt; i &lt;&lt; ", address_of_i: " &lt;&lt; address_of_i &lt;&lt; std::endl;
+
+*0[address_of_i] += 1;
+
+std::cout &lt;&lt; "i: " &lt;&lt; i &lt;&lt; ", address_of_i: " &lt;&lt; address_of_i &lt;&lt; std::endl;
+```
+
+Output:
+
+--
+```
+i: 2, address_of_i: 0x7ffd53eb8dcc
+i: 3, address_of_i: 0x7ffd53eb8dcc
+```
+
+---
+template: tplMainTop
+name: pointer-incr
+layout: true
+
+# Pointers
+
+```cpp
+int  j = 4;
+int  i = 2; // i is stored at address 0x7ffd53eb8dcc
+int *address_of_i = &amp;i; // *pointer* to the memory location of `i`
+
+std::cout &lt;&lt;  "*address_of_i: " &lt;&lt; *address_of_i
+          &lt;&lt; ", address_of_i: " &lt;&lt;  address_of_i &lt;&lt; std::endl;
+
+*address_of_i += 1;
+
+std::cout &lt;&lt;  "*address_of_i: " &lt;&lt; *address_of_i
+          &lt;&lt; ", address_of_i: " &lt;&lt;  address_of_i &lt;&lt; std::endl;
+```
+
+Output:
+
+---
+template: pointer-incr
+
+```
+&#01;*address_of_i: 2, address_of_i: 0x7ffd53eb8dcc
+&#01;*address_of_i: ?, address_of_i: ?
+```
+
+---
+template: pointer-incr
+
+```
+&#01;*address_of_i: 2, address_of_i: 0x7ffd53eb8dcc
+&#01;*address_of_i: 4, address_of_i: 0x7ffd53eb8dd0
+```
+
+---
+template: tplMainTop
+
+# POD arrays
+
+```cpp
+int pi_digits[] = {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+std::cout &lt;&lt; "pi_digits: ";
+for (int i=0; i&lt;sizeof(pi_digits)/sizeof(int); ++i)
+{
+  std::cout &lt;&lt; pi_digits[i] &lt;&lt; " ";
+}
+std::cout &lt;&lt; std::endl;
+```
+
+Output:
+
+--
+
+```
+pi_digits: 3 1 4 1 5 9 2 6 5 3 5
+```
+
+---
+template: tplMainTop
+
+# POD arrays
+
+```cpp
+int pi_digits[] = {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+std::cout &lt;&lt; "pi_digits: ";
+for (int i=0; i&lt;sizeof(pi_digits)/sizeof(int); ++i)
+{
+  //std::cout &lt;&lt; pi_digits[i] &lt;&lt; " ";
+  std::cout &lt;&lt; *(pi_digits+i) &lt;&lt; " ";
+}
+std::cout &lt;&lt; std::endl;
+```
+
+Output:
+
+--
+
+```
+pi_digits: 3 1 4 1 5 9 2 6 5 3 5
+```
+
+---
+template: tplMainTop
+
+# Pointer Arithmetic
+
+## Adding an integer to pointers
+The sum of a pointer and an integer can be defined by the following relation:
+.block.hcenter[
+`ptr[i]` is equivalent to `*(ptr+i)`
+]
+
+Operation | C/C++ code | Math formula
+--------- | :-----: | :----------:
+Addition | `T *s = p + i;` | `$s = p + \mathrm{sizeof}(T)\times i$`
+Subtraction | `T *s = p - i;` | `$s = p - \mathrm{sizeof}(T)\times i$`
+Increment | `p++;`, `++p` | `$p_{\rm after} = p_{\rm before} + \mathrm{sizeof}(T)$`
+Decrement | `p--;`, `--p` | `$p_{\rm after} = p_{\rm before} - \mathrm{sizeof}(T)$`
+
+--
+
+.vspace2pc[
+.alert[The table before is not valid when `T` is `void`, since `void*` does not have any arithmetic!
+
+Attempting to __use arithmetic with generic pointers__ should be (but not always is) a __compile error__.]
+]
+
+--
+
+## Adding a pointer to pointers
+Operation | C/C++ code | Math formula
+--------- | :-----: | :----------:
+Addition  | Nonsense! | Nonsense!
+Subtraction (C) | `int d = p - q;` | `$d = \frac{p - q}{\mathrm{sizeof}(T)}$`
+Subtraction (C++) | `std::ptrdiff_t d = p - q;` |`$d = \frac{p - q}{\mathrm{sizeof}(T)}$`
+
+---
+template: tplMainTop
+
+# Memory allocation
+
+## Static, on the stack
+```cpp
+return_type fct_name(/* arguments list */)
+{
+  int arr[N_VALUES];
+  ...
+  // Automatic release of `arr` when returning
+}
+```
+
+- Allocation' size has to be __known at compile time__.
+- No kernel system call: __fast allocation__.
+- Allocated on the call stack: __limited size__, but __automatically released__.
+
+--
+
+## Dynamic, on the heap
+.row[
+.column.w49.top[
+```c
+// Dynamic (heap) allocation in C
+#include <stdlib.h>
+...
+void *p = malloc(n_values*sizeof(int));
+//int *p = calloc(n_values, sizeof(int));
+if (p == NULL) { /* Allocation failed*/ }
+
+... // use `p`
+
+free(p);
+
+```
+]
+.column.w49.top[
+```cpp
+// Dynamic allocation in C++
+int *p = new int[n_values];
+if (!p) { /* Allocation failed */ }
+
+... // use `p`
+
+delete [] p;
+
+```
+]
+]
+
+- Allocation' size can be __known at runtime__.
+- Based on kernel system call: __slow allocation__.
+- Allocated on the heap: __handle large allocations__.
+- Needs to __manually deallocate__ the memory.
+
+---
+template: tplMainTop
+name: focus-static-mem-0
+
+# Focus on static allocations
+
+```cpp
+void fn()
+{
+  int x; char a=0; short b=1; long c=2; int d=3; double e=4; float f=5;
+  ...
+}
+
+```
+
+.hcenter[
+  **What is the memory layout?**
+  [Answer](https://godbolt.org/#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZgQDbYB2AhgLbYgDkAjF%2BTXRMiAZVQtGIHgBYBQogFUAztgAKAD24AGfgCsp5eiyahUAUgBMAIUtXyKxqiIEh1ZpgDC6egFc2TA3cAGQImbAA5PwAjbFIQCy1yAAd0JWIXJi9ffwMUtOchELDIthi4hPtsRwKmESIWUiIsvwCeSuqMuoaiIojo2PjEpXrG5py24e7ekrLBgEp7dB9SVE4uSwBmUNRfHABqMw2PF2HSbHZD3DMtAEFru4sNnDowvaUkdAB3M4k0gC9sBAAG7kUhzA4AVg89z2byImBAaCWRAOR0OHgOFgslgAbJZsWi0Y8gejSVjDgARfGo6FHPbA9AETAAKjmuKBkOht1hPN5PNJdPx5DeBAB6BoEHxAuhxOl%2BLZGyp5MJHn%2B2HFwPBZihML5eulmIswtxUpVm1IcqxewAtJi8craTKNiSzcqlRYaej6agkA1WZKLDiwTbvb7SP72Vqddy9XyDcMESB3PR7qEUWwWKEGUy2bczAB2Gwx2FpvbqQ5Fm68n0NPYsVEUvZaCtvD6NPZRBt7Hgt%2BhCYB7VBdgmV3mlzBdjYtzBLKKMPbYLvSFs0PssFE0LsQiv3XWw95fH70NUQFjC9QK0c8g/fc7H0WAqLCliXvetw93k%2BoYVRV/F9%2B3r8D4QJgwqoH%2BVbXh8gH3gCEDYMKmAQbyN5HieNDCtgEFvmcRDLEwTY7nm%2BYUlwCz0NwEL8AEXA6OQ6DcDKNjWG8SwrIumx8OQRDaGRCwANYgBCiQUVw0jUbx9HcPwSggIkPG0WR5BwLAKAYGwSQMLElDUOpmmMHEwA8BCRp0PQRCxLJEBRJJUShA0ACe3BcXZrCkA5ADyUS6NgTjOfw6kcMIHlMPQTmKeQOBRD4wAeBIx7%2BZF2AZiYkgRYQZxOAQQLYLJEXYOovk%2BBZiVplUkn0AQUSkI5Xg4JJRCkAQbCJTlpBRKk2AUslxjAJVJi8Qsq4sMASgAGoENgnweUkzCJYIwhiBInAyHIwjKGomgRfobRGAN5jWLYhhVbJkALOgSQ1Hl/DoG1TU4KdEALA4vk1G4TCeN4LSBB90z9HEbR5OkQhjK0ySpMDTB/aUAwTFUr2dCMTRfeM7QI0IXSNNDswTEjoMGJMWOhH0MMA89bGrFI5GURJEUMVwZYABw4taOLSHswCoEOxkAHQehA%2BDEGQmIbDwcz8ApOhzAJQkidw4nkDRdH0zJcncYN1NcBY/AtcJiuSSr6uKQsKnIEmhWoMVZA6aepCjaoxhVCI0E0VxekMOuGQO2E9DO18SsBegGlaYZxlGu7BnhOwayB8HBkecVfufAH5AFb5Nx29dqcW3UhA0fwC2iOIkirYXG0aJJO2GL1aC2EdlVRI952XRkeXWgA6vFNrtwVjX1h3s2YMYzioDdd1Mrl8ALKQPjCM12AACroN4TeLMslO43n3tOy7iXfCwST%2BZrVH63T3C4BbVukEzLNsxzXPdhCfP0kxR17ILJDX5x4tG1LCxIOcHAcQnqGHljrWWp9lbSXsGrSWfFQFcA2LTKBXAJYa3IG1NIrhpBAA%3D%3D)
+]
+
+---
+template: focus-static-mem-0
+
+Name | Type     | Type size | Address               | Real size
+:--: | :------: | :-------: | :-------------------: | :-------:
+`x`  |  `int`   |    4      | 0x.gray[7ffe8d94f6]cc | 
+`a`  | `char`   |    1      | 0x.gray[7ffe8d94f6]cb | 1
+`b`  | `short`  |    2      | 0x.gray[7ffe8d94f6]c8 | 3
+`c`  | `long`   |    8      | 0x.gray[7ffe8d94f6]c0 | 8
+`d`  |  `int`   |    4      | 0x.gray[7ffe8d94f6]bc | 4
+`e`  | `double` |    8      | 0x.gray[7ffe8d94f6]b0 | 12
+`f`  | `float`  |    4      | 0x.gray[7ffe8d94f6]ac | 4
+
+
+---
+template: focus-static-mem-0
+name: focus-static-mem-1
+
+Name | Type     | Type size | Address               | Real size
+:--: | :------: | :-------: | :-------------------: | :-------:
+`x`  |  `int`   |    4      | 0x.gray[7ffe8d94f6]cc | 
+`a`  | `char`   |    1      | 0x.gray[7ffe8d94f6]cb | 1
+`b`  | `short`  |  **2**    | 0x.gray[7ffe8d94f6]c8 | **3**
+`c`  | `long`   |    8      | 0x.gray[7ffe8d94f6]c0 | 8
+`d`  |  `int`   |    4      | 0x.gray[7ffe8d94f6]bc | 4
+`e`  | `double` |  **8**    | 0x.gray[7ffe8d94f6]b0 | **12**
+`f`  | `float`  |    4      | 0x.gray[7ffe8d94f6]ac | 4
+
+---
+template: focus-static-mem-1
+
+.anim-memory[![](../img/static-memory-layout-0.png)]
+
+---
+template: focus-static-mem-1
+
+.anim-memory[![](../img/static-memory-layout-1.png)]
+
+
+---
+template: tplMainTop
+name: focus-dyn-mem-0
+
+# Focus on dynamic allocations
+
+```cpp
+int *p = new int[58];
+```
+
+---
+template: focus-dyn-mem-0
+
+.anim-memory[![](../img/memory-4.png)]
+
+---
+template: focus-dyn-mem-0
+
+.anim-memory[![](../img/memory-dyn-1.png)]
+
+---
+template: focus-dyn-mem-0
+
+.anim-memory[![](../img/memory-dyn-2.png)]
+
+- p=0x0188
+
+---
+template: focus-dyn-mem-0
+
+.anim-memory[![](../img/memory-dyn-3.png)]
+
+- p=0x0188
+- size: ?
+
+---
+template: focus-dyn-mem-0
+
+.anim-memory[![](../img/memory-dyn-3.png)]
+
+- p=0x0188
+- size: 232 bytes! (58 `int`s)
+
+---
+template: tplMainTop
+
+# Focus on dynamic allocations
+
+```cpp
+int *p = new int[58]; double *q = new double[10];
+```
+
+.anim-memory[![](../img/memory-dyn-4.png)]
+
+---
+template: tplMainTop
+
+# Focus on dynamic allocations
+
+```cpp
+int *p = new int[58]; double *q = new double[10]; char *r = new char[152];
+```
+
+.anim-memory[![](../img/memory-dyn-5.png)]
+
+---
+template: tplMainMiddle
+
+# Recap!
+
+Operation  |   Syntax   | Notes
+---------- | :--------: | :----
+address-of | `&amp;var` | `var` is a variable.
+indirection/dereference | `*ptr` | `ptr` is a non-generic pointer.
+allocate (C) | `void* ptr = malloc(size);` | `size` can be known at runtime.
+deallocate (C) | `free(ptr)` | `ptr` has to be allocated.
+allocate array (C++) | `T *ptr = new T[size];` | Memory is not initialized.
+allocate-initialize array (C++) | `T *ptr = new T[size]();` | Memory is zeroed.
+deallocate array (C++) | `delete [] ptr;` | `ptr` has to be allocated as array.
+allocate variable (C++) | `T *ptr = new T;` | Memory is not initialized.
+allocate-initialize variable (C++) | `T *ptr = new T();` | Memory is zeroed.
+deallocate array (C++) | `delete ptr;` | `ptr` has to be allocated as variable.
+shift pointer | `ptr + i` | `ptr` is a pointer, `i` is an integer.
+shift pointer | `ptr - i` | `ptr` is a pointer, `i` is an integer.
+increment pointer | `ptr++`, `++ptr` | `ptr` is a pointer.
+decrement pointer | `ptr--`, `--ptr` | `ptr` is a pointer.
+distance between pointers | `p - q` | `p` and `q` are pointers, the result is integer.
+
+---
+template: tplMainTop
+
+# Common mistakes
+
+.row[
+.column.w49[
+- Segfaults, illegal read/write
+  ```cpp
+  int n_rows=42, n_cols=73;
+  long *mat = new long[n_rows*n_cols]();
+  for (int row=0; row&lt;n_rows; ++row)
+  {
+      for (int col=0; col&lt;n_cols; ++col)
+      {
+          mat[col*n_cols + row] = row+col;
+      }
+  }
+  ```
+- Uninitialized pointers.
+  ```cpp
+  T *ptr;
+  for (int i=0; i&lt;42; ++i)
+  {
+      /* ... long and complex code ... */
+      prepare_very_secret_stuffs(i, ptr);
+      /* ... long and complex code ... */
+      ptr = new T();
+      /* ... long and complex code ... */
+  }
+  ```
+].column.w49[
+- Illegal frees
+  ```cpp
+  int *ptr = nullptr;
+  if (very_complex_condition())
+  {
+      ptr = new int[12]();
+  }
+  if (less_restrictive_condition())
+  {
+      delete [] ptr;
+  } 
+  ```
+- Memory leaks.
+  ```cpp
+  int *ptr = nullptr;
+  for (int i=0; i&lt;42; ++i)
+  {
+      ptr = new int[i+2]();
+      /* ... Clever code ...  */
+  }
+  delete [] ptr;
+  ```
+]]
+
+--
+
+.alert[.hcenter[.vspace2pc[Pointers are dangerous!]]]
+
+--
+
+.block[.hcenter[.vspace2pc[How to avoid danger? **[Encapsulation](encapsulation.html)!**]]]
+
+    </textarea>
+    <script src="../javascript/remark.min.js"></script>
+    <script src="../javascript/katex.min.js"></script>
+    <script src="../javascript/auto-render.min.js"></script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai',
+        countIncrementalSlides: false,
+        highlightLines: true,
+        highlightSpans: false
+      });
+
+      // KaTex rendering
+      renderMathInElement(
+              document.body,
+              {
+                      delimiters: [
+                              {left: "$$", right: "$$", display: true},
+                              {left: "$", right: "$", display: false},
+                              {left: "\\(", right: "\\)", display: false}],
+                      ignoredTags: []
+              });
+    </script>
+  </body>
+</html>
