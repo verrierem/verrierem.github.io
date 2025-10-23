@@ -229,6 +229,7 @@ em {
 .w25 { width: 25%; }
 .w28 { width: 28%; }
 .w30 { width: 30%; }
+.w33 { width: 33%; }
 .w35 { width: 35%; }
 .w37 { width: 37%; }
 .w38 { width: 38%; }
@@ -251,11 +252,20 @@ em {
 .w95 { width: 95%; }
 .w100 { width: 100%; }
 
+
 .vspace {
   margin-top: 1em;
   margin-bottom: 1em;
 }
 
+.vspace2em { margin-top: 2em; margin-bottom: 2em; }
+.vspace4em { margin-top: 4em; margin-bottom: 4em; }
+.vspace6em { margin-top: 6em; margin-bottom: 6em; }
+.vspace8em { margin-top: 8em; margin-bottom: 8em; }
+.vspace2pc { display: block; margin-top: 1%; margin-bottom: 1%; }
+.vspace4pc { display: block; margin-top: 2%; margin-bottom: 2%; }
+.vspace6pc { display: block; margin-top: 3%; margin-bottom: 3%; }
+.vspace8pc { display: block; margin-top: 4%; margin-bottom: 4%; }
 .footnote p {
   margin: 0 0 0 0;
 }
@@ -370,6 +380,12 @@ img {
   margin: 0.3em;
 }
 
+.boxed {
+  border: black solid 1px;
+  box-sizing: border-box;
+  padding: 0.2em;
+  margin: 0.2em;
+}
 /* ================================= */
 /* ======== separation line ======== */
 /* ================================= */
@@ -597,6 +613,9 @@ td
   }
 }
 
-.hljs-comment {
-  color: #ffa0a0 !important;
+code.remark-inline-code:has(.katex)
+{
+  background-color: rgba(255, 255, 255, 1.0);
+  color: #000000;
+  font-weight: bold;
 }

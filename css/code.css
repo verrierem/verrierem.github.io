@@ -62,8 +62,13 @@ div.remark-code-line:empty::before {
 
 .remark-inline-code {
   box-shadow: none;
-}
+  font-size: 0.8em;
+  padding: 0.1em;
+  /*font-weight: bold;*/
+  color: #FFFFFF;
+  background-color: rgba(0,0,0,0.9);
 
+}
 .remark-code-line-highlighted {
   background-color: rgba(113, 0, 116, 1);
 }
@@ -97,12 +102,6 @@ div.remark-code-line:empty::before {
   white-space: pre;
 }
 
-.remark-inline-code {
-  font-size: 1.0em;
-  padding: 0em;
-  font-weight: bold;       
-}
-
 h1 > code.remark-inline-code {
   color: rgba(255, 210, 210, 1.0);
 }
@@ -113,6 +112,10 @@ h1 > code.remark-inline-code.has-jax {
 
 .remark-code {
   display: block;
+}
+
+.hljs-comment {
+  color: #ffa0a0 !important;
 }
 
 /* ================================= */
