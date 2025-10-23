@@ -5,6 +5,15 @@
   width: 55%;
 }
 
+.anim-memory img {
+  box-sizing: border-box;
+  display: block;
+  margin: auto;
+  width: 55%;
+}
+
+.subw80 > * > img { width: 80%; }
+
 .cpp-history
 .cpp-history table td:nth-child(1)
 {
@@ -23,4 +32,7 @@
   text-align: center;
   font-weight: bold;
   color: rgba(0, 255, 0, 1.0);
+}
+.gray {
+  color: rgba(192, 192, 192, 1.0);
 }
