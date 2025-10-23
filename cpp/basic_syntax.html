@@ -719,7 +719,8 @@ int fibonacci(int n)
 {
   if (n &lt; 0)
     throw std::range_error("The Fibonacci sequence is not defined on negative numbers.");
-  if (n &lt; 2) return n;
+  if (n &lt; 2)
+    return n;
   return fibonacci(n-1) + fibonacci(n-2);
 }
 ```
