@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Encapsulation</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/hexagone.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/code.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/katex.min.css"/>
+  </head>
+  <body>
+    <textarea id="source" readonly>
+
+layout: true
+name: tplMain
+
+.footnote[
+M. Verrière - École Hexagone - 2025 - [![](../img/home_w.png)](../index.html#1)
+]
+
+---
+layout: true
+name: tplMainTop
+template: tplMain
+class: top
+
+---
+layout: true
+name: tplMainMiddle
+template: tplMain
+class: middle
+
+---
+template: tplMainMiddle
+
+# What is encapsulation?
+
+.block[.hcenter.vspace2pc[It consists in hiding the internal, possibly complex, implementation details and only expose the interface.]]
+
+
+.vspace4pc[
+Advantages:
+- simplify unit testing,
+- avoid antipatterns,
+- less bugs, more t(h)rust,
+- security: give more control on data usage,
+- lead to more accessible code,
+- facilitate maintainance,
+- make it easier to add new features.
+]
+
+---
+template: tplMainTop
+
+# Example: Safe pointers in C
+
+.row[
+.column.w44[
+```c
+struct safe_ptr
+{
+  int *p; // Actual pointer
+  int size; // Size of the allocation
+};
+typedef struct safe_ptr SafePtr;
+
+SafePtr SafePtr_allocate(int size)
+{
+  int *p = NULL;
+  if (size &lt;= 0) return {NULL, 0};
+  *p = malloc(size * sizeof(int));
+  if (p == NULL) return {NULL, 0};
+  return {p, size};
+}
+
+void SafePtr_deallocate(SafePtr *ptr)
+{
+  if (*ptr.p == NULL) return;
+  free(*ptr.p);
+  *ptr = { NULL, 0 };
+}
+```
+].column.w55[
+```c
+int SafePtr_isvalid(SafePtr ptr)
+{
+  return ptr.p != NULL;
+}
+
+int SafePtr_get(SafePtr ptr, int index, int *data)
+{
+  if (!SafePtr_isvalid(ptr)) return 0;
+  if (index &lt; 0 && index &gt;= size) return 0;
+  *data = ptr[index];
+  return 1;
+}
+
+int SafePtr_set(SafePtr ptr, int index, int data)
+{
+  if (!SafePtr_isvalid(ptr)) return 0;
+  if (index &lt; 0 && index &gt;= size) return 0;
+  ptr[index] = data;
+  return 1;
+}
+```
+]]
+
+--
+
+<hr/>
+
+.row[
+.column.w49[
+```c
+/* Safely allocate the ptr */
+SafePtr ptr = SafePtr_allocate(8);
+
+/* Safely set the ptr content */
+if (!SafePtr_set(ptr, i, 73))
+{
+  /* Display error and exit */
+}
+```
+].column.w49[
+```c
+/* Safely get the ptr content */
+if (!SafePtr_get(ptr, j, *data))
+{
+  /* Display error and exit */
+}
+
+/* Safely deallocate the ptr */
+SafePtr_deallocate(&amp;ptr);
+```
+]]
+
+---
+template: tplMainTop
+
+# Example: Separate headers
+
+.row[
+.column.w49[
+```cpp
+/* Header file MyString.h */
+
+//! Structure representing a safe string.
+struct my_string
+{
+  char *str;  ///&lt; POD string
+  int length; ///&lt; size of the string
+};
+//! Opaque type.
+typedef struct my_string MyString;
+
+//! Create an empty MyString.
+MyString MyString_create_empty();
+
+//! Concatenate two MyString.
+
+//! \param lhs the left-hand-side
+//! \param rhs the right-hand-side
+//! \return the concatenation.
+MyString MyString_concat(const MyString lhs,
+                         const MyString rhs);
+
+//! Concatenate MyString and POD-strings.
+
+//! \param lhs the left-hand-side
+//! \param rhs the right-hand-side
+//! \return the concatenation.
+MyString MyString_concat2(const MyString lhs,
+                          const char *rhs);
+
+//! Destroy a MyString
+void MyString_destroy(MyString *str);
+```
+].column.w49[
+]]
+
+---
+template: tplMainTop
+
+# Example: Separate headers
+
+.row[
+.column.w49[
+```cpp
+/* Header file MyString.h */
+
+//! Structure representing a safe string.
+struct my_string
+{
+  char *str;  ///&lt; POD string
+  int length; ///&lt; size of the string
+};
+//! Opaque type.
+typedef struct my_string MyString;
+
+//! Create an empty MyString.
+MyString MyString_create_empty();
+
+//! Concatenate two MyString.
+
+//! \param lhs the left-hand-side
+//! \param rhs the right-hand-side
+//! \return the concatenation.
+MyString MyString_concat(const MyString lhs,
+                         const MyString rhs);
+
+//! Concatenate MyString and POD-strings.
+
+//! \param lhs the left-hand-side
+//! \param rhs the right-hand-side
+//! \return the concatenation.
+MyString MyString_concat2(const MyString lhs,
+                          const char *rhs);
+
+//! Destroy a MyString
+void MyString_destroy(MyString *str);
+```
+].column.w49[
+```cpp
+/* Implementation file MyString.c */
+
+*#include <MyString.h>
+
+MyString MyString_create_empty()
+{
+  /* Clever and complex implementation */
+}
+
+MyString MyString_concat(const MyString lhs,
+                         const MyString rhs)
+{
+  /* Clever and complex implementation */
+}
+
+MyString MyString_concat2(const MyString lhs,
+                          const char *rhs)
+{
+  /* Clever and complex implementation */
+}
+
+void MyString_destroy(MyString *str)
+{
+  /* Clever and complex implementation */
+}
+```
+]]
+
+---
+template: tplMainMiddle
+
+# Encapsulation improved in C++
+
+.block.hcenter[.vspace6pc[[Object-Oriented Programming](oop.html)]]
+
+    </textarea>
+    <script src="../javascript/remark.min.js"></script>
+    <script src="../javascript/katex.min.js"></script>
+    <script src="../javascript/auto-render.min.js"></script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai',
+        countIncrementalSlides: false,
+        highlightLines: true,
+        highlightSpans: false
+      });
+
+      // KaTex rendering
+      renderMathInElement(
+              document.body,
+              {
+                      delimiters: [
+                              {left: "$$", right: "$$", display: true},
+                              {left: "$", right: "$", display: false},
+                              {left: "\\(", right: "\\)", display: false}],
+                      ignoredTags: []
+              });
+    </script>
+  </body>
+</html>
