@@ -253,9 +253,66 @@ void MyString_destroy(MyString *str)
 ---
 template: tplMainMiddle
 
-# Encapsulation improved in C++
+# Encapsulation is at the core of the C++ standard library!
 
-.block.hcenter[.vspace6pc[[Object-Oriented Programming](oop.html)]]
+Header's name | Main object(s) | Description
+--------------- | -------------- | -----------
+[iostream](https://en.cppreference.com/w/cpp/header/iostream.html) | `std::cin`, `std::cout`, `std::cerr` | I/O streams
+[fstream](https://en.cppreference.com/w/cpp/header/fstream.html) | `std::ifstream`, `std::ofstream` | Read/write files w/ streams
+[vector](https://en.cppreference.com/w/cpp/header/vector.html) | `std::vector<T>` | Dynamic size arrays
+[map](https://en.cppreference.com/w/cpp/header/map.html) | `std::map<K, T>` | Dictionnaries
+[string](https://en.cppreference.com/w/cpp/string/basic_string.html) | `std::string` | Safe strings
+[algorithm](https://en.cppreference.com/w/cpp/header/algorithm.html) | e.g., `std::sort()` (many more) | Various standard algorithms
+[complex](https://en.cppreference.com/w/cpp/numeric/complex.html) | `std::complex<T>` | Complex numbers
+[memory](https://en.cppreference.com/w/cpp/header/memory.html) | e.g.,`std::shared_ptr` (and many more) | Memory tools, smart pointers, ...
+... and many more, ([see the full list](https://en.cppreference.com/w/cpp/standard_library.html))
+
+---
+template: tplMainTop
+
+# Example of standard library C++ codes
+```cpp
+#include <vector>
+
+// Initialize a vector with 100 elements, all zeros
+std::vector<int> some_squares(100, 0);
+int i = 0;
+// New form of the `for`-loop
+for (int &amp;elem : some_squares)
+{
+  elem = i * i;
+  i += 1;
+}
+```
+
+--
+
+```cpp
+#include <iostream>
+#include <string>
+
+std::string lhs = "Hello";
+std::string rhs = "World";
+std::string concatenation = lhs + ' ' + rhs;
+std::cout &lt;&lt; "lhs.size()=" &lt;&lt; lhs.size() &lt;&lt; std::endl;
+std::cout &lt;&lt; "rhs.size()=" &lt;&lt; rhs.size() &lt;&lt; std::endl;
+std::cout &lt;&lt; "concatenation=" &lt;&lt; concatenation &lt;&lt; std::endl;
+```
+
+--
+
+```cpp
+#include <map>
+#include <string>
+
+std::map<std::string, double> constants;
+constants["c"] = 299792458.0; // m/s
+constants["h"] = 6.62607015e-34; // J.s
+constants["hbar"] = 1.054571818e-34; // J.s
+
+double hbar = constants.at("hbar"); // Set variable hbar to 1.054571818e-34
+double G = constants.at("G"); // Throw an exception "std::out_of_range"
+```
 
     </textarea>
     <script src="../javascript/remark.min.js"></script>
