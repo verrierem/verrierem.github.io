@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Object-Oriented Programming</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/hexagone.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/code.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/katex.min.css"/>
+  </head>
+  <body>
+    <textarea id="source" readonly>
+
+layout: true
+name: tplMain
+
+.footnote[
+M. Verrière - École Hexagone - 2025 - [![](../img/home_w.png)](../index.html#1)
+]
+
+---
+layout: true
+name: tplMainTop
+template: tplMain
+class: top
+
+---
+layout: true
+name: tplMainMiddle
+template: tplMain
+class: middle
+
+---
+template: tplMainTop
+
+# What is an object?
+
+
+---
+template: tplMainTop
+name: object-intro
+layout: true
+
+# What is an object?
+
+It is the combination of a set of data and a set of actions.
+
+## Example: A Warrior class
+
+
+---
+template: object-intro
+
+.vspace2pc[
+- What are the data?
+]
+
+---
+
+template: object-intro
+
+.vspace2pc[
+- What are the data? Its position, life, strength.
+- What are the actions?
+]
+
+---
+
+template: object-intro
+
+.vspace2pc[
+- What are the data? Its position, life, strength.
+- What are the actions? To move, attack.
+]
+
+--
+
+.block[.hcenter[How to implement a Warrior in C++?]]
+
+--
+
+.row[
+.column.w40[
+```cpp
+class Warrior
+{
+  Position *pos;
+  int life;
+  int strength;
+
+public:
+  Warrior(int strength = 100);
+  ~Warrior(); 
+  void move(int sx, int sy);
+  void attack(Warrior &amp;ennemy);
+};
+```
+].column.w55[
+```cpp
+#include <Warrior.hpp>
+
+Warrior::Warrior(int strength)
+  : pos(new Position(Position::random)),
+    life(100), strength(strength) {}
+
+Warrior::~Warrior() { delete pos; }
+
+void Warrior::move(int sx, int sy)
+{
+  pos.shift(sx, sy);
+}
+
+void Warrior::attack(Warrior &amp;ennemy)
+{
+  if (pos.distance(ennemy.pos) &gt; 1) return;
+  if (strength &gt; ennemy.strength) ennemy.life -= 1;
+  else if (strength &lt; ennemy.strength) life -= 2;
+  else { ennemy.life -= 3; life -= 3; }
+}
+
+```
+]]
+
+---
+template: tplMainTop
+
+# That's our game so far.
+
+.hcenter[
+![](../img/oop_character-warrior.png)
+]
+
+.alert.hcenter[OK, but a game with only warriors is far too violent. What can we do?]
+
+---
+template: tplMainTop
+
+# Why not add some villagers in it...
+
+.hcenter[
+![](../img/oop_character-warrior-villager.png)
+]
+
+Characteristics of a villager:
+- What are the data? Its __position__, __life__, skills.
+- What are the actions? To __move__, study, build.
+
+--
+
+.alert.hcenter[Will we have to copy code from Warrior?]
+
+---
+template: tplMainTop
+
+# Let's harness the power of inheritance
+
+.hcenter[
+![](../img/oop_character.png)
+]
+
+.hcenter.boxed[
+Characteristics of a *Character*:
+- The data: its position &amp; life.
+- The actions: to move.
+]
+
+.hcenter.w80[
+.row[
+.column.w49.boxed[
+Characteristics of a *Warrior*:
+- They are a *Character*.
+- __Other__ data: Its strength.
+- __Other__ actions: To attack.
+].column.w49.boxed[
+Characteristics of a *Villager*:
+- They are a *Character*.
+- __Other__ data: Its skills.
+- __Other__ actions: To study, build.
+]]]
+
+---
+template: tplMainTop
+
+# How does inheritance translates into C++?
+
+```cpp
+/* file: Character.hpp */
+
+class Character
+{
+  Position *pos;
+  int life
+
+protected: // Only subclasses can access protected methods
+  // We don't want rogue code killing our characters...
+  void loose_life(int n_lives);
+  // ... or create unspecified characters.
+  Character() : pos(new Position(Position::random)), life(100) {}
+public:
+  virtual ~Character() { delete pos; }
+  void move(int sx, int sy);
+};
+```
+
+.row[
+.column.w49[
+```cpp
+/* file: Warrior.hpp */
+#include <Character.hpp>
+
+class Warrior : Character
+{
+  int strength;
+
+public:
+  Warrior(int init_strength = 100)
+  : Character(), strength(init_strength)
+  { }
+  ~Warrior(); 
+  void attack(Character &amp;ennemy);
+};
+```
+].column.w49[
+```cpp
+/* file: Villager.hpp */
+#include <Character.hpp>
+
+class Villager : Character
+{
+  int skill_lvl;
+
+public:
+  Villager(int init_skill_lvl = 12)
+  : Character(), skill_lvl(init_skill_lvl)
+  { }
+  void study();
+  void build();
+};
+```
+]]
+
+---
+template: tplMainTop
+
+# Nice game, but it would be better with more Warrior types
+
+OK... So let's make two kind of warriors: the *Spartan*s and the *Ninja*s,
+that inherit both from *Warrior*.
+
+.hcenter.vspace4em[
+![](../img/oop_warrior.png)
+]
+
+--
+
+.alert.hcenter[How can we implement that? Each warrior has his secret and specific way to fight...]
+
+---
+template: tplMainTop
+
+# Standard inheritance does not really apply...
+```cpp
+/* file: Warrior.hpp */
+#include <Character.hpp>
+class Warrior : Character
+{
+  int strength;
+
+public:
+  Warrior(int init_strength = 100)
+  : Character(), strength(init_strength)
+  { }
+  virtual ~Warrior(); 
+  // Makes no sense: warriors can attack, but there is no implementation...
+  virtual void attack(Character &amp;ennemy) { ??? }
+};
+```
+
+.row[
+.column.w49[
+```cpp
+/* file: Spartan.hpp */
+#include <Warrior.hpp>
+
+class Spartan : Warrior
+{
+public:
+  Spartan() : Warrior(120) { }
+  ~Spartan(); 
+  void attack(Character &amp;ennemy) override
+  {
+    // Can be implemented
+    throw_dory_on(ennemy);
+  }
+};
+```
+].column.w49[
+```cpp
+/* file: Ninja.hpp */
+#include <Warrior.hpp>
+
+class Ninja : Warrior
+{
+public:
+  Ninja() : Warrior(30) { }
+  ~Ninja(); 
+  void attack(Character &amp;ennemy) override
+  {
+    // Can be implemented
+    throw_shuriken_on(ennemy);
+  }
+};
+```
+]]
+
+---
+template: tplMainTop
+
+# Abstract base class inheritance makes the trick!
+```cpp
+/* file: Warrior.hpp */
+#include <Character.hpp>
+class Warrior : Character
+{
+  int strength;
+
+public:
+  Warrior(int init_strength = 100)
+  : Character(), strength(init_strength)
+  { }
+  virtual ~Warrior(); 
+* // Pure virtual method: no implementation, only redirects to derived method!
+* virtual void attack(Character &amp;ennemy) = 0;
+};
+```
+
+.row[
+.column.w49[
+```cpp
+/* file: Spartan.hpp */
+#include <Warrior.hpp>
+
+class Spartan : Warrior
+{
+public:
+  Spartan() : Warrior(120) { }
+  ~Spartan(); 
+  void attack(Character &amp;ennemy) override
+  {
+    // Can be implemented
+    throw_dory_on(ennemy);
+  }
+};
+```
+].column.w49[
+```cpp
+/* file: Ninja.hpp */
+#include <Warrior.hpp>
+
+class Ninja : Warrior
+{
+public:
+  Ninja() : Warrior(30) { }
+  ~Ninja(); 
+  void attack(Character &amp;ennemy) override
+  {
+    // Can be implemented
+    throw_shuriken_on(ennemy);
+  }
+};
+```
+]]
+
+
+
+
+
+
+---
+template: tplMainTop
+
+# Recap: the *pillars* of Object-Oriented Programming (OOP)
+
+## Encapsulation
+
+See [encapsulation](encapsulation.html)
+
+## Polymorphism
+
+Ad-Hoc | Subtyping | Parameterized
+------ | --------- | -------------
+See [overloading](basic_syntax.html#54) | See [inheritance](oop.html#10) | Templates (for later)
+
+## Inheritance
+
+See [inheritance](oop.html#10)
+
+## Abstraction
+
+See [pure-virtual methods and abstract class!](oop.html#13)
+
+    </textarea>
+    <script src="../javascript/remark.min.js"></script>
+    <script src="../javascript/katex.min.js"></script>
+    <script src="../javascript/auto-render.min.js"></script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai',
+        countIncrementalSlides: false,
+        highlightLines: true,
+        highlightSpans: false
+      });
+
+      // KaTex rendering
+      renderMathInElement(
+              document.body,
+              {
+                      delimiters: [
+                              {left: "$$", right: "$$", display: true},
+                              {left: "$", right: "$", display: false},
+                              {left: "\\(", right: "\\)", display: false}],
+                      ignoredTags: []
+              });
+    </script>
+  </body>
+</html>

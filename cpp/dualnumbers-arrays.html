@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dual number matrices and arrays</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/hexagone.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/code.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/katex.min.css"/>
+  </head>
+  <body>
+    <textarea id="source" readonly>
+
+layout: true
+name: tplMain
+
+.footnote[
+M. Verrière - École Hexagone - 2025 - [![](../img/home_w.png)](../index.html#1)
+]
+
+---
+layout: true
+name: tplMainTop
+template: tplMain
+class: top
+
+---
+layout: true
+name: tplMainMiddle
+template: tplMain
+class: middle
+
+---
+template: tplMainTop
+
+# Dual numbers: matrices and arrays
+
+.alert.hcenter[__Finish the project of last time first!__]
+
+A matrix is a two-dimensional array of numbers where the number of row and columns is fixed.
+
+For example, the matrix
+
+`$$
+M = \begin{pmatrix} 1 & 2 \\ 3 & 4 \\ 5 & 6\end{pmatrix}
+$$`
+
+has three columns and two rows.
+
+When the number of elements in a vector `$v$` is the same as the number of columns
+in a matrix `$M$`, we can multiply them according to
+`$$
+(Mv)_i = \sum_k M_{ik} v_k.
+$$`
+
+.block.hcenter[
+1. Without using the standard library, implement a **safe** representation
+of vectors of dual numbers.
+1. Without using the standard library, implement a **safe** representation
+of matrices on double numbers.
+1. Overload `operator*` between matrices and dual number vectors.
+]
+    </textarea>
+    <script src="../javascript/remark.min.js"></script>
+    <script src="../javascript/katex.min.js"></script>
+    <script src="../javascript/auto-render.min.js"></script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai',
+        countIncrementalSlides: false,
+        highlightLines: true,
+        highlightSpans: false
+      });
+
+      // KaTex rendering
+      renderMathInElement(
+              document.body,
+              {
+                      delimiters: [
+                              {left: "$$", right: "$$", display: true},
+                              {left: "$", right: "$", display: false},
+                              {left: "\\(", right: "\\)", display: false}],
+                      ignoredTags: []
+              });
+    </script>
+  </body>
+</html>
