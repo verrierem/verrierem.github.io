@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Metaprogramming</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/hexagone.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/code.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/katex.min.css"/>
+  </head>
+  <body>
+    <textarea id="source" readonly>
+
+layout: true
+name: tplMain
+
+.footnote[
+M. Verrière - École Hexagone - 2025 - [![](../img/home_w.png)](../index.html#1)
+]
+
+---
+layout: true
+name: tplMainTop
+template: tplMain
+class: top
+
+---
+layout: true
+name: tplMainMiddle
+template: tplMain
+class: middle
+
+---
+template: tplMainTop
+name: whatismetaprog
+
+# What is metaprogramming?
+
+---
+template: whatismetaprog
+
+.floating[
+![](../img/metaprog-wiki-detail-0.png)
+.caption[[https://en.wikipedia.org/wiki/Metaprogramming](https://en.wikipedia.org/wiki/Metaprogramming)]
+]
+
+---
+template: whatismetaprog
+
+.floating[
+![](../img/metaprog-wiki-detail-1.png)
+.caption[[https://en.wikipedia.org/wiki/Metaprogramming](https://en.wikipedia.org/wiki/Metaprogramming)]
+]
+
+---
+template: whatismetaprog
+
+.floating[
+![](../img/metaprog-wiki-detail-2.png)
+.caption[[https://en.wikipedia.org/wiki/Metaprogramming](https://en.wikipedia.org/wiki/Metaprogramming)]
+]
+
+---
+template: whatismetaprog
+
+.floating[
+![](../img/metaprog-wiki-detail-3.png)
+.caption[[https://en.wikipedia.org/wiki/Metaprogramming](https://en.wikipedia.org/wiki/Metaprogramming)]
+]
+
+---
+template: whatismetaprog
+
+.floating[
+![](../img/metaprog-wiki-detail-4.png)
+.caption[[https://en.wikipedia.org/wiki/Metaprogramming](https://en.wikipedia.org/wiki/Metaprogramming)]
+]
+
+--
+
+
+.vspace8pc[.alert.hcenter[
+In this lecture, we will see a specific type of metaprogramming: __template metaprogramming (TMP)__.
+]]
+
+---
+template: tplMainTop
+
+# What is a template?
+
+Let's imagine we want to write a function `print_add` that prints the equation
+associated with the addition of two integers:
+```cpp
+int print_add(int a, int b)
+{
+  std::cout &lt;&lt; a &lt;&lt; '+' &lt;&lt; b &lt;&lt; " = " &lt;&lt; a+b &lt;&lt; std::endl;
+}
+```
+
+--
+
+Indeed, our code expands and we now need to do the same for floats, doubles, and many others:
+```cpp
+float print_add(float a, float b)
+{
+  std::cout &lt;&lt; a &lt;&lt; '+' &lt;&lt; b &lt;&lt; " = " &lt;&lt; a+b &lt;&lt; std::endl;
+}
+double print_add(double a, double b)
+{
+  std::cout &lt;&lt; a &lt;&lt; '+' &lt;&lt; b &lt;&lt; " = " &lt;&lt; a+b &lt;&lt; std::endl;
+}
+...
+```
+
+.alert.hcenter[The implementation of the function is duplicated, the code is not concise, prone to errors.]
+
+--
+
+Templates enable to **write the implementation for a generic type**. We can write instead
+```cpp
+template&lt;typename T&gt;
+T print_add(T a, T b)
+{
+  std::cout &lt;&lt; a &lt;&lt; '+' &lt;&lt; b &lt;&lt; " = " &lt;&lt; a+b &lt;&lt; std::endl;
+}
+```
+
+.block.hcenter[That is an example of a **function template**.]
+
+---
+template: tplMainTop
+
+# Parameterized types
+
+We can also use templates to parameterize types: *class templates*. We have many examples from the standard library:
+- `std::array&lt;elem_t, n_elem&gt;`, e.g.:
+```cpp
+std::array&lt;int, 3&gt; arr1 = {-12, 5, 3}; // An array of three signed integers
+std::array&lt;unsigned, 2&gt; arr2 = {0, 1}; // An array of two unsigned integers
+std::array&lt;double, 4&gt; arr3 = {1.0, 1.414, 1.732, 2.0}; // An array of four doubles
+```
+- `std::complex&lt;elem_t&gt;`, `std::vector&lt;elem_t&gt;`, ...
+
+A class template declaration has the syntax:
+```cpp
+template&lt;metatype1 var_1, metatype2 var_2, etc&gt;
+class TemplateName
+{
+  ...
+};
+```
+where the metatypes are one of:
+- Constant template parameter, e.g.,
+```cpp
+template&lt;int n&gt; struct fibonacci { /* ... */ };
+template&lt;char c, double* ptr, double (*fun)(int)&gt; struct complicated_code { /* ... */ };
+```
+--
+
+- Type template parameter, e.g.,
+```cpp
+template&lt;typename elem_t&gt; struct MyVector { /* ... */ };
+template&lt;class elem_t&gt; struct MyVector { /* ... */ }; // Completely equivalent
+```
+--
+
+- Template template parameter, e.g.,
+```cpp
+template<template<typename> class F, typename A> struct Transformer { /* ... */ };
+```
+
+---
+template: tplMainTop
+
+# Example of class template declaration: `MyArray`
+
+```cpp
+template&lt;typename elem_t, int size&gt;
+struct MyArray
+{
+  /* TODO */
+};
+```
+
+---
+template: tplMainTop
+
+# Example of class template declaration: `MyArray`
+
+```cpp
+template&lt;typename elem_t, int size&gt;
+struct MyArray
+{
+  MyArray() : elements{} {}
+
+  elem_t &amp;operator[](int index)
+  {
+    if (index &lt; 0 || index &gt;= size) { throw std::out_of_range("Oops"); }
+    return elements[index];
+  }
+
+  elem_t operator[](int index) const
+  {
+    if (index &lt; 0 || index &gt;= size) { throw std::out_of_range("Oops"); }
+    return elements[index];
+  }
+  
+private:
+  elem_t elements[size];
+};
+```
+.vspace1pc.block.centering[Code available
+[here](https://godbolt.org/#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZgQDbYB2AhgLbYgDkAjF%2BTXRMiAZVQtGIHgBYBQogFUAztgAKAD24AGfgCsQAJnL0WTUKgCkBgEJXr5AA6nsAOXacuAYTt2A1ABVsNgcTImxfAFlsIhZVUnRQSIBPAEFSUhYk3wA3Hl8LAFZrJVJLAoARfhVGVCICIWpmTE90egBXNiYQAp5yJoAZAiZXDoAjbFIQAGZeh3QlYnqmFvbO7tn5xaFB4Zcxiene6uxapZEY0iIVjq6e8mPToXOWS52RtnHJmfuLq9ab9Y/F5EN57D4HGYASnu6DapQ8VimQ1Q7Rw%2BSmnnqSiIpGw7AsU1wFi0KWJKTCwVC2AJniISQczHcvmwjDYAH0iORfEMiL4FgAvamEsnY0htWrJNIZJJkiwAdlsJN8kvSmQgkN8IGZrOYRCU8tscvK%2BQV8vKsqV2qCHPyBgAbOgGRkSKRCrYKhAedymDh1JCycqDQHldyaL5PT7sOp0Z5fFoTd45bGhr70USpsaBdgNQbfEQkPEAO58oiYEAgWFENnoGhsjJmbAQKwGADyjv1BgM/qm1hN5stytxRDhTCtHGE%2BqKKajhXNPeDZotKWVLOtvMdExYLrds4jvOnft8GCY2IXpoHofDB5jcYT8uTkejBPTmYIgpzCrzBfQxexZYrbRVjWdamMAjbNm2Dgdl2BK9ouF5DiOY66pO1gHrOsFnv2pIkg4pAENkW6cMGq7srypEoW6WYYfOJKLrROEpF6bAsEMEDZOgBCYP6dHnsuKrSjSPJctIBjPr4bBJGyLyCQxyqSdJqoykUWizuixo8Jhlp/uWGCATGNISVJMmZG6qkVAZGIlv%2BTT0FpjHKhEqRKUJwhcqphJGWyQQOHSimyb2AD0gUBEgBBKL49BDOEqC4kREUsL4hYvEwQzAMG7GcdxXk%2BX5Jkyj2vjBb4zw%2Bi8mBJZkeboL4uJsOg2ThM2ChMG0KgVYR%2BEsKMjDNpVpCpWYS6DtESEeYqpJGlw0L0NwBT8F0XA6OQ6DcN4Nh%2BIElJEZE0SxPEiROVKVW5PkRQlGUlTkEQ2jTdCADW3RaMY3DSAtt0rdwVQgM9N1LdN5BwLAKAYMEDATJQ1Cgw44OTMAPAFEYdD0GEpBKNQowfaMQwvEk3B8OQ2OsKQSQtqMugnH9BOg%2BORAtkw9B4/95A4KMbTAJ4Ej0OjvD8DgLFmJIzOELipyNTzy1RicgEeATPIsh9UWjBkJMtDgH04gQbD4/wjWkKM8zYOUQSgVFZi3dCNAmMASgAGoENghYtgyi0E4IwhiBInAyHIwjKGomjM/oRgmOblgbTYxgEKM6OQNCjp1EIPP8A1Ez4Tgsfqo4zhuBwa0%2BDYAQ%2BVSu0xHECRakdSk5HkbosEobCzlUq6PF0EBNNcay9AM0Vgp8UiOJsifLP8XeDwsw%2BgvskxHC3w/PJcnddLPNTz78U/gjPQKL6Py/byCvfT1I0JKLC8KGDNc3vczq1eAXvZbSEO1RGXB2V850o12d1j143FT8H9HQkIHpPRelwN65BFrLVvt9X6FtL5cAMPwbWBRnpQJTl9a6FtAaIAgCgKWqBAJkEhhAF4NtVDOHoCIJAP5Xb8GhgwLcSwKHDCoTQws6DyAMMYHDBGRhuETFzh4eh6AwY8JbIBahtCPoELSDbTBBDziEEWvwd2ohxCSB9mo/2GgPrB2MKBNA98o4x3gPHXySweYAFoADqXNfC2KjDiRKtiGSYFMHUVADiWxTBTnrdO2BM7QicLsdw%2BcI4P2Ls/Pa5dDofxOrXIoUsm7kDFMILW2B/DoFaEEmEcJUCcCMH%2BIYLCWRSI4TrcghYMgOB1gg%2BakCPq33WrYQuj8S4v32hXASCTv7JP/lg/6wDyBIDxDgSYWdZrgOQaAzhMD7g/UGUAhBvjGk30wYAu65A9YLAaNIIAA%3D%3D%3D)
+!]
+--
+
+.vspace4pc[.alert[
+.row[
+.column.middle.w60[
+Multiple limitations:
+1. The empty array case (`size==0`) triggers a warning.
+1. The index is known at runtime.
+].column.middle.w39[
+**&rArr; Can we do better?**
+]]]]
+
+---
+template: tplMainTop
+
+# Handling the empty array case: Template specialization
+
+```cpp
+// General case
+template&lt;typename elem_t, int size&gt;
+struct MyArray
+{
+  MyArray() : elements{} {}
+
+  elem_t &amp;operator[](int index)
+  {
+    if (index &lt; 0 || index &gt;= size) { throw std::out_of_range("Oops"); }
+    return elements[index];
+  }
+
+  elem_t operator[](int index) const
+  {
+    if (index &lt; 0 || index &gt;= size) { throw std::out_of_range("Oops"); }
+    return elements[index];
+  }
+  
+private:
+  elem_t elements[size];
+};
+
+*// Specialization for the case `size==0`
+*template&lt;typename elem_t&gt;
+*struct MyArray<elem_t, 0>
+*{};
+```
+.vspace1pc.block.centering[Code available
+[here](https://godbolt.org/#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZgQDbYB2AhgLbYgDkAjF%2BTXRMiAZVQtGIHgBYBQogFUAztgAKAD24AGfgCsQAJnL0WTUKgCkBgEJXr5AA6nsAOXacuAYTt2A1ABVsNgcTImxfAFlsIhZVUnRQSIBPAEFSUhYk3wA3A18LAFZrJVJLAoARfhVGVCICIWpmTE90egBXNiYpADZyJoAZAiZXDoAjbFIQAGZHdCVieqYW9s6e2fm6oUHhlzGJ6fJq7FrFkRjSImWOrp5eo5OhM5YL7ZG2ccmZpXPL1uu177PIivXbvfZTACUh3QbVKHisUyGqHaOHyU089W%2BpGw7AsU1wFi0KUJKQA9KTfABxZgTCS%2BcQqElhYKhbB4zxEJIOZjuXzYRhsAD6RHIviGRF88wAXmz8SSsW1ask0hkkiSLAB2WxE3zK9KZCAQ3wgPkC5hEJSa2wa8r5LWa8rqnWmoLC/IGbrobkZEikQq2CoQcVipg4dQQkm6q2R3Vimi%2BIOh7DqNGeXxaO3eDVpoZhtEEqa26XYI1W3xEJDxADukqImBAIBhREF6BogoyZmwECsBgA8l7LQYDBGptY7Y7nbrsURYUwXRxhJairnk4VHaOYw6nSldfzXRKvbTff614mJSvw/ShN9N/bJ3GExfU%2BnM5qc0mU3iC0WCDLS1ry0rdAa2%2BetGzaZtW3bUxgC7Ht%2BwcQdhzxMct3vadZ3nc0l2sC81xQ28Jx3fIiQcUgCGyFgwhAGM9yFCU6Ow/1i3wjciS3NjiSJclfBEblUAICRfyoxZfEEUhAPCBlwgsbotBYws8XKLRZJUolmRCKjZQ5LkeQ4edhS/eUiFIRUJQiVJ9TVdE6OFUUVLldj7RtAj2KJYM2BYIYIGydACEwCMnO1YiLJVTJ2XFUVpAML9fDYJJBWeVVXOI%2BLEqs/0VIqNFbR4FLdVAhsMAg1N2TihKkvCoosttdkysKkAmnoFKY1CjL0Ui9NYrSoIHE5dLks43UfL8gLysFXr%2Bsq6zgqnaJMIc4KHS4KF6G4Ap%2BC6LgdHIdBuG8Gw/ECFktMiaJYniRI2tVHI8mY0o134IhtBWqEAGsQAKLRjG4aRNpe3buCqEBvue7aVvIOBYBQDBggYCZKGoWGHHhyZgB4AojDoegwlIJRqFGAHRiGZ4km4PhyGJ1hSCSXtRl0Y4wYp2GFyIXsmHoMnwfIHBRjaYBPAkeh8d4fgcE8sxJG5whsRObJsBFnbk2OCCPAp8V%2BQB%2BgCFGDIaZaHAAZMgg2HJ/h5dIUY5mwcoghg7WzBeqEaBMYAlAANQIbAq17bktopwRhDECROBkORhGUNRNG5/QjBMR3LEOmxjB1/HIChL1NiYEX%2BHQC3yJwNPDUcZw3A4fafBsAJetZM6YjiBITWuzJbvyIoWCUNhHsOPcHi6CAmiuVYeD6UMQT2SYR4cOYFiEIebnWWemHHsFJ57mos6eC556kdfGdOH4V4%2BXfAW3v5h8OQ%2BhjeY%2BeChJQYThQxVvW/7ub2rxK7HY7NLCOuLsbnqG6uQ27WA7l3CoT0nbvU%2Bt9NaXA/rkC2jtD%2BwNQbQJ%2BlwAw/BTZfSQQDVB5AwY6ChFDZAjV1Aq19IjCAzw3aqGcPQEQSBgL%2B34MjBgIkhAMOGEwlhVZkHsPQHDRgaMMZGA4aIsuHghEiImL2CCzDWEA2VqgNIbsgZ9EoagM4hAtr8EDqIcQkgw6GMjhoAGsdjAwTQF/FOowi4Zz6osEWABaAA6kLXwHjkwmRYN49x3JMCmDqKgbxvYpjeNAkpROtgbA8ApnnCYBcFbwChE4HY7gK5J2/jXU6UR66XSbpZYBd0ijK27qZYQJtsD%2BHQK0Rx0JYSoE4EYUCQweH8iUQIs25AqwZAcGbF%2BXANr4PftkuJuSTp/wKQAq6JSW4gP9BUyBRCMFIBxDgSYxd4GINwd9QRgMuBoLWeDCEwyphvxQZo4hr1yAW3mA0aQQA%3D%3D%3D)
+!]
+
+---
+template: tplMainTop
+
+# Focus on template specialization
+
+It works through pattern matching.
+
+```cpp
+// General case (implicitely, minus specializations): substitution failure
+template &lt;typename T0, typename T1, typename T2, int index&gt;
+struct TypeSelector
+{
+  // No definition here! If someone instanciate this template with an index that
+  // has not been specialized, we have a substitution failure.
+  // Alternatively, we can declare the template without general case.
+};
+
+// Specialization for the case index == 0
+template &lt;typename T0, typename T1, typename T2&gt;
+struct TypeSelector&lt;T0, T1, T2, 0&gt;
+{
+  using type = T0;
+};
+
+// Specialization for the case index == 1
+template &lt;typename T0, typename T1, typename T2&gt;
+struct TypeSelector&lt;T0, T1, T2, 1&gt;
+{
+  using type = T1;
+};
+
+// Specialization for the case index == 2
+template &lt;typename T0, typename T1, typename T2&gt;
+struct TypeSelector&lt;T0, T1, T2, 2&gt;
+{
+  using type = T2;
+};
+```
+
+---
+template: tplMainTop
+
+# Focus on template specialization
+
+Template specialization also works with types:
+```cpp
+template&lt;typename T&gt; struct TypeNamer { static constexpr const char *value = "unknown"; };
+template&lt;&gt; struct TypeNamer&lt;int&gt;      { static constexpr const char *value = "int"; };
+template&lt;&gt; struct TypeNamer&lt;char&gt;     { static constexpr const char *value = "char"; };
+template&lt;&gt; struct TypeNamer&lt;unsigned&gt; { static constexpr const char *value = "unsigned"; };
+template&lt;&gt; struct TypeNamer&lt;float&gt;    { static constexpr const char *value = "float"; };
+template&lt;&gt; struct TypeNamer&lt;double&gt;   { static constexpr const char *value = "double"; };
+```
+
+Template specialization is __extremely powerful__. It makes this template system __Turing-complete__!!!
+- We can implement everything theoretically computable (it is equivalent to `$\lambda$`-calculus).
+- It is as powerful as C++ itself (but at compile-time).
+
+For example, let's implement the factorial sequence:
+--
+
+```cpp
+template&lt;int n&gt; struct factorial    { static constexpr int value = n*factorial&lt;n-1&gt;::value; };
+template&lt;&gt;      struct factorial&lt;0&gt; { static constexpr int value = 1; };
+```
+and the Fibonacci sequence:
+--
+
+```cpp
+template&lt;int n&gt; struct fibonacci
+{
+  static constexpr int value = fibonacci&lt;n-1&gt;::value + fibonacci&lt;n-2&gt;::value;
+};
+template&lt;&gt; struct fibonacci&lt;0&gt; { static constexpr int value = 0; };
+template&lt;&gt; struct fibonacci&lt;1&gt; { static constexpr int value = 1; };
+```
+.vspace1pc.block.centering[Full code available
+[here](
+https://godbolt.org/#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZgQDbYB2AhgLbYgDkAjF%2BTXRMiAZVQtGIHgBYBQogFUAztgAKAD24AGfgCsQAJnL0WTUKgCkBgEJXr5AA6nsAOXacuAYTt2A1ABVsNgcTImxfAFlsIhZVUnRQXwAxFlQSUgIJX1NMZIIAIyFU1AJfCwBWayVSS3KAEX4VRjSCIWpmTE90egBXNiYQcvIOgBkCJlc%2B/OxSEGkhh3QlYlamLt7%2BwccllaExiZcpmbmhpuwWoREY0iJ1voHT7GaiVauWG/3JtmnZ%2BfIla63br3LYA95ET6Hb7HeYASn%2B6B6NQ8VgAzONUL0cGVUZ5WgDSNh2BZUbgLFoAILkikAegAVAEAJ4OVzuWa%2BHBhUhscbhIhIcKsDi%2BdA0bK%2BIjM8IsJTignjYC%2BOk06lhYKhbAkzySllC8L%2BEm4XwEnppJkstwcUhlADs1mNMReqF8GCYAOw6gc1tdAJdSHeSoAbhIeuESXUygYDD0mABrJjoADuTCsBhJ9osNrq6dVQRCLDCWsNDtIpqI5tZVq14yIxd89frmftYKdLqE7s93vb5dQ/utdODvTDqIjqZrqfTtuzqNslLV%2BcLuOLJrN/illpmWt77zrDabDoLBGdPrCnbbbp7faDIeHo6j29IE5nU5zc7zGqLpJLZYrG8fuJjZZgAmTBi33Fsj3PDsvSgy8AwHG8cTvaM3QIYDsFAqNJ0zadZwpecPyXL8V3LNcLTZLUaHodAC13W1m0dSCTw9GCTz9eDB1DJDIwMKiaNrLDnxw198PfAtNSIo0SN/CjcUwRF8kYXdwMY49uxYrsL3Y/tONvHj5J6RTNUEjMsxE6l6V8GhUnSTJ6BANtggYbAAFoXmFAh1SCZhGKEEUxX5cIVAAR1DJhUHCZVc3VcTq2EXwU1JalpOstIyDs6km2pesILUi8NN8GtfF07imDpVLbIkLUmBcnhDRAEBdPMsyZ2ihcJO8JLKRSmz0qq3EtENTK7Wyg9W2Ys8ipK8NfDq1rKWE%2BaqUpSy6EKVhUBKByMCcxg3M88JPJCbzhEPPzRQlAVjWwULmAipUVTfGLFzxeLErJbqiFLM01qKTaCGGvCctU2CCqmxCZt%2BjaSmq2r6saiGbCsgo/ph3EarTUkGqapbFrwgjYsk5Kvp/KHigBgahoWkbKWBw88ug61waHbjBtxlr8bEl6qYpFKUehinPDmj6qRpik6fG9TJvi6aR1m5rcMyykirYFhxggQN0AITBYUB0aAUwBqMB6ctP08GSqzkhSlKxhGWbNh1DZADp6BE4GneN02iPN1MeAMMAwG41McU682Kr613cT9%2BHZdDx2Gpdycylp%2BO0ERL249TMn/ogaQDFhIOoxDrVkfW8mtTzmOIe91PE6W%2BsaRpA2jfT4vcR47OSlzm0C5m4OHc7wXpBtKv7Zr5vnaYTBI6B3xCSIJEmF8Nm8Jwrh4Xsrhyn4AYuB0ch0G4bwbD8QJnvCKIYjiBIHJSNKMiyHI8jL/6ykqapagacgiG0df4VjQYWhjDcGkDvX%2BB9uCNBAEAn%2Be917kDgLAFAO0HDOQoFQCAKC0EgGADwcoRg6D0C5Eoag%2BRwH5HGO8Rk3A%2BDkAoawUgjIADy%2BRdDnFgbQnaHBhBMKYPQahcDyA4HyD0YAngJD0BIbwfgOBVZmEkIIwghIWiBmwFI/eHpzgmw8LQmsTxwH0AKKQKhXQcDgK%2Bp5Gh/BVGkEKCoOoQRTDAEMWYX%2B8IqIsGAEoAAagQbAiYmG6isXIYQYgJCcBkCExQKgNDgP0EYEwrjLAnxsMYAoJDIDwnQA4F47ZIEHxsRkHAGSIDwicAcdwR8fBIzPu1SI0RYjxESHfSq9BshT2fqjUoFRrAyjYBUL%2BZwLgDAgB0O4mweDDCnpCI4sxJmLGWLktYwIJnbEWasGZ0I5n/CeOw14gJxkDEmUMpZbwPi8ihD8KQ/wDkrKOTc8Emyrk8HhEoREyJDAb24Nvcgu996Hy8NU%2B0tSNT1Kvk02%2BvUH5tKfkkfm5M369KUP0%2Bo/BYE6FhP/QBwCuCgN%2BeAgFUCYFuK%2BVwAw/A2DYr%2BfwQl383EIMQBAFAmjUAmzIJQag7wvGqGcPQEQSAky704egXaZ0mA8omHygVyZwFYMYLMXB%2BDyBypmBufJKrSBMJNvywV4CWUUlIF4/JLKriEF3vwQQoTxCSEiZa6JahNCCPicYJxaAgVpPyCUrJOTVhSJcgAdQkb4ANHovosGDf6lkmBTCthckw1ENLCnazUfAMpzg1WApScCrmF8GnX2aVCuy7TchwpfiURFmiBn8FLMIA6/h0DdC9QiJEEVDA3LNRKp4OqZXSPIImYxDgrGkp%2BdSiBmbbA1JzWCxpN9kiFsfh00tXSK3qE1KiulcDMXkAFCwHAsxSk4rxZS8oQDR20pIcSzdpKE34sEbS9Ff9yA2OWG0aQQA%3D
+)!]
+---
+template: tplMainTop
+
+# Compile-time index: Function template and substitution failure
+
+```cpp
+// See std::enable_if. Base for SFINAE (Substitution Failure Is Not An Error)
+template&lt;bool cond, typename T&gt; struct enable_if;
+// Specialization for cond == true: define `type`
+template&lt;typename T&gt; struct enable_if&lt;true, T&gt; { using type = T; };
+// Specialization for cond == false: do not define `type`, substitution failure
+template&lt;typename T&gt; struct enable_if&lt;false, T&gt; { };
+
+// General case
+template&lt;typename elem_t, int size&gt;
+struct MyArray
+{
+  MyArray() : elements{} {}
+
+  template&lt;int index&gt;
+  typename enable_if&lt;index &gt;= 0 &amp;&amp; index &lt; size, elem_t&gt;::type &amp;get()
+  {
+    return elements[index];
+  }
+
+  template&lt;int index&gt;
+  typename enable_if&lt;index &gt;= 0 &amp;&amp; index &lt; size, elem_t&gt;::type get() const
+  {
+    return elements[index];
+  }
+  
+private:
+  elem_t elements[size];
+};
+// Specialization for the case `size==0`
+template&lt;typename elem_t&gt; struct MyArray&lt;elem_t, 0&gt; {};
+```
+
+.vspace1pc.block.centering[Full code available
+[here](
+https://godbolt.org/#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZgQDbYB2AhgLbYgDkAjF%2BTXRMiAZVQtGIHgBYBQogFUAztgAKAD24AGfgCsQAJnL0WTUKgCkBgEJXr5AA6nsAOXacuAYTt2A1ABVsNgcTImxfAFlsIhZVUnRQSIBPAEFSUhYk3wA3AGZfCwBWayVSS0KAEX4VRlQiAiFqZkxPdHoAVzYmQwAOcmaAGQImV06AI2xSKVkHdCViBqZWjq7exzmFoSGRl3HJ6fIa7DrFkRjSImXO7oM%2Bo5OhM5YL7dG2CamZQ/PLtuu1pQ/V67d77GQASkO6HaZQ8Vlyw1QHRwBVyngagNI2HYFlyuAsWhSBJSAHoSb4RNhwoDMCAQMwWGNGAB9Ag0AB0vmsLBUvkEpApADEAJIuFK4XwQETtMaA4jtepCXyClgMGHhYVKXwudBEXwpJi%2BXDpMjg4lhYKhbC4zxjdBtXwYJiYci%2BIhJBwMjgBXESzHtOq%2BBlM7Csmi42yEskUz2oAgSAgALxYisN/MdQkwqIquIqbtI7U4vhwdBGBQAbFp3Z6LJXzUEQinrWjq17wv5fb5/YHgyy2TaiAXsK6O3iCgB2ay%2BdrzMxuj3hXM%2B3JTizjnMr4nRkSx%2BP0JMpxZ8sgZ53Zpc0CQqEDF9C%2BJi64vYUuLyut2taeuWpsDhesb2jn6g4Bnqvahv2aKXvQKgjp2a6ruuEbElu5IAOLMJMEiOjy1qEhajZhL%2Bnr/uE2CMGwzJEK6wx6vMibNvihLdnqESpOkmTIZOxK%2BMkaQZEkEDgr4N5kUEzBEEo8FrnmUmIYS3FBuRlEFAY5boJ6GQkKQRS2JUEA0b4ww4OoZqEjxUlmTxhk0JKRnYOoqKeL4WgTt445OXZDm%2BkudHYEJ8Fukg8QAO5dkQtIgNCRDMugNDMhkZjYBAVgGAA8upkkGAYZorhOOaWTxWJEDChqiRwwiScUnlFBukYpOZclEpZZXKepmFaTpNX6cIhnOvZQlOoCCkWfVVlsrZfVeWizmuWuHmTai%2BK5Hmvn%2BZOgUhWFEVRTFcUJcASUpelDiZdlEZ5QphXRCViliRVOnVZUSGWdJw2WfhVo2gZ1V4gprYkUGrAhmGX0Ld5y0zVY5ZQ71xmOV2SbDrdFFEL6dKtip5YHUQgnDVxBW%2BEVN1leJlXWI9tV4/lTWjR9P5ot9k3ee9f7uIDjJ9uGDNg79EMuVDMOefDvmui1qN4ujC6%2BNjgmnkNL346NV3FaQpXkaTD1M09m4K9T5mEg4pAENkTYgApYvIxrxS%2BTVz1EohOs09uu4JsmqbHgKRBIOE4i8h%2BNvLbmn51nhDafS2rPemLzMpMxvHsUkNpi66n6/fJXEO3VxIGWwqpMBA2ToAQmCmfbdU8axfEcdzVG%2BNIBidmwSTMs8/F2zxTctwnOk8A3lTZr4PDt1tdIYAqjk2r4net5k7LYzave%2BrLNqTzSdLNPQw9kmvaBRRP03Twnc/RDaAC0Q94svaKr%2BF6/OpvuUkgAVL4nipREqjCgMKT%2BMKqUuEaAASoA1KgDfBPxJApbet9d7jxXgfZuM8kjH3Fp4euS9/LX2mjvDe51n6v3fp/b%2Bv9/5AJAWAiBClK7dxrinRuzcGzui7m3R2PEC5FxLlPBhwQmFIOHkTVWzk7bSS4JCeg3BCj8G6FwHQ5B0DcG8DYPwgRvxhEiNEWI8REjUP4jkfIOlSjlCqOQIg2hRGQgANYgEKFoYw3BpBSLMXI7g1QQC2NMTI0R5A4CwBQBgYIDBJiUGoP4hwgSpjAB4IUIwdB6BhFIEoagYwnFjGGM8JI3A%2BDkFSawUgSRUpjF0McDxWT/HlSIKlJg9AMmePIDgMY7RgCeAkNBTJ/AcC5zMJIWphAsQnGyNgRJtT7LHAVB4LJNEyJOP3GMDIeTWg4CcYOAgbA2nkAGaQO0KgKhBFMMAfcZgzGQhoCYYASgABqBBsDBVSsRNZghhBiAkJwL4DzFAqA0E4/QRgTCHMsEomwxgCCyngJCdSqYhn8HQBso2OBEmQEhE4HY7gFE%2BBsAEMOTZ1ExDiAkG8OjMh6IKMUHkbAarVFEg8boEBmhXFWDwfozpgR7E%2BOseYqY6XdAZbMdlixmWglZfcVMTwLicqkIcSlwqgTDDeB8cVgJni/BWFy74ir%2BVyp4JCJQ0JYSGDERIxxtT5FeDRVOFRBFwhRBxVo/FbFdF5GJdyJQZLKj8A8TocEljrG2PEVwBx5BpGyONa49xRz9VcAMPwVZNiA1OODSYo53jEAQBQCM1ACoyDBIgM8M5qhnD0BEEgdAwVpGlPQAE0Iiw80jALUWktTjQnhJAJE6J5BG2MFIG4DgLi23lrCR21KCpC3FsDfwNNaQzk9rTWcQg0j%2BBvKeZIV58hlBqE0LU75xg9loFNUCkFCK5EOAhdwU%2BAB1Fpvgz32UHCwS9p7PSYFMPUVAl7Ur5FPjSXM/zbA2B4Fk6FkxYWDNBY4ZwXaPCKJ/WazFairWaLxfHe1%2BjigjPJeQAswgVnYH8PaVpB7tUwlQJwIwNJhjVrIsO%2BtvB%2BDBQyA4Np4bJGxqNaigF0HVGWo0bi7RdrCUOp0qh11CbPGevIN7FgOApiCTsX6qN3rmNBp7Yk0NInw25ENYprgbqw3rMmPMRo0ggA%3D%3D
+)!]
+
+---
+template: tplMainTop
+
+# Substitution Failure Is Not An Error (SFINAE)
+
+.block.centering[We now want to have a Python-like indexing with negative indices... How to do that?]
+--
+
+```cpp
+/* ... */
+
+template&lt;typename elem_t, int size&gt;
+struct MyArray
+{
+  /* ... */
+
+  template&lt;int index&gt;
+  typename std::enable_if&lt;index &gt;= 0 &amp;&amp; index &lt; size, elem_t&gt;::type &amp;get()
+  { return elements[index]; }
+
+  template&lt;int index&gt;
+  typename std::enable_if&lt;index &gt;= 0 &amp;&amp; index &lt; size, elem_t&gt;::type get() const
+  { return elements[index]; }
+
+* template&lt;int index&gt;
+* typename std::enable_if&lt;index &lt; 0 &amp;&amp; index &gt;= -size, elem_t&gt;::type &amp;get()
+* { return elements[size+index]; }
+
+* template&lt;int index&gt;
+* typename std::enable_if&lt;index &lt; 0 &amp;&amp; index &gt;= -size, elem_t&gt;::type get() const
+* { return elements[size+index]; }
+
+private:
+  elem_t elements[size];
+};
+
+/* ... */
+```
+
+.vspace1pc.block.centering[Full code available
+[here](
+https://godbolt.org/#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZgQDbYB2AhgLbYgDkAjF%2BTXRMiAZVQtGIHgBYBQogFUAztgAKAD24AGfgCsQAJnL0WTUKgCkBgEJXr5AA6nsAOXacuAYTt2A1ABVsNgcTImxfAFlsIhZVUnRQSIBPAEFSUhYk3wA3aV8LAFZrJVJLAoARfhVGVCICIWpmTE90egBXNiYQAGZyJoAZAiZXDoAjbFIQADZeh3QlYnqmFvbOnsd5xaFB4Zcxiene6uxapZEY0iIVjq6j7Bq6oXOWS52RtnHJmfIlC6vWm7rX4vIhvPYfA4zACUP3QbVKHis3SGqHaOHy3U89V%2BpGw7As3VwFi0KSRKLR4QJniISQc2AA%2BkQMsQlATcL4APQc3zktro36YEAgZgsUaMekEGi%2BQSkXwiABiAEkXCkiSTiSkub4AOLMCYSXziFQasLBULYKk0umsDi%2Be5BRnkHnCXwLABeFsJGpxbVqyTSGSSGosAHZbCTfP70pkIFDfCA7YwOMJWWHQ%2BV8mmQ%2BVgxHEw6iPkDFN0HSMiRSIVbBUIENC0McOooRrI6HwylI5HJb5a0xGxjPL4ALTuykh7zj539tkEjOjuNt3xEJDxADurqIgpAcKI9PQNHpGTM2AgVgMAHlS6yDAZm91rJmc3mu1Le9PMb4tHHcUR4Ux88mRCskUo52A22DqIUOb3i2nY/n%2BAHMEBVbgZBFQEu2rbZrmHYAYyvilvqFZVlBvb1n2EFxhgTC/LBbawS%2BPaoQOw6jpmE6DsxM7dHOBAeguYZLiu6DrgKQo7nuB5HsAJ5npeDjXreGGPgxPKvlxH5fr48GkP%2B9qAcBxR8RaNioVBGGqTpelJkhhlmehMF5umdF5qaIQsGEVJ1lOEEzq5tIiraYnCqwYoMpKXkUeoGJEjxn5FlMVhTD50VUq6xlOvpjJskKVqUsWMlELGdFps%2B2nRAh%2Bm2ShUXmY5uHOeqrlBO5nmYt5Zlev51ruBuW4imFEo0JF76xRmWgJUlKUsaOmVJtlhK5QFviFbGhpCLRTmlbhkZWYhKY1Y2dWYSpTW4W55qReRR1dedAU2uEwUDeKEXtVFLETUlU0aWNrEZXhRA5SAeUJatzZbSdu0Vbp%2B3ISBxlgbVDknY1pLNWaHmeliLqdWqd09UFm5Cs94XDW976Dp9xbfe93EZiO/1ZYDi3A8tYPrTRgMQ5Z0PWUE1Xwx6iNHcjJVPikDikAQ2SYyAsFM7DhmgaL6rYfVGpaiIdKoAQEh8R5SzSmQQnhEalJTFooE8bOWgWBbJotZdmJ5Q9AN%2BSkPp%2BhEqTRkGmJM06tu3fRavthq3lsCwQwQNk6AEJg4OkttkbewGmRXU60gGGyvhsEk9IvIGFl5nnBe%2B1WPDZxUGIZjwxe4cFGBtIWVJpaXheZAAdIVVKV2ya2tx%2BT19vQ9eRu35dFNIdfV7OvjZ/VkaNzuA5t/nHdJN30RUkOdeEgPmJpcPmCj4v5W/jDQdh9mXAwvQ3AFPwXRcDo5DoNw3g2H4gQY2EkTRLEeIiRU6%2BxyHkKsJQyiVHIEQbQt8YQAGsQAFC0MYbg0gn5wLftwKoIBUGwJfrfcgcBYAoAwMEBgExKDUHIQ4ShkxgA8AKEYOg9AwikCUNQUYWDRhDBeEkbgfByC8NYKQJI55Ri6BOAQoR5DALniYPQARhDyA4FGG0YAngJD0E4bwfgOBI5mEkCowguJTjZGwLo1%2BEETjNw8EIus9wsH0AIKMDIYiWg4CwUyAgbBBH8AsaQUY8xsDlCCKYYALizBwJhDQEwwAlAADUCDYFXOea0/i5DCDEBITgMgsmKBUBoLB%2BgjAmGiZYL%2BNhjCuM4ZAGEpZHg0RwW/QJUscB1NjI4ZwbgOAfx8DYAIjtMb/xiHEBICYQGBjAfkIoLAlBsCglUe0pwGgQCaNcNYPA%2Bh9jBPsSY2y5gLCaZsrohzNhNL2RCA5PwVlNOeJcU5UhbkPDOH8K5nxnnAkeQCLZPx3lDHeJ8ngMIlBwgRIYO%2BD9MEqPfl4AZD4f6tXCFEMZQDJk%2B2mbkWZ1h5mLIqPwAhOgoSIOQag%2B%2BXAMHkGfq/OFuD8ExKhVwAw/A/EoOpVgulMCYnEMQBAFANjUDNzINQiALwEmqGcPQEQSARLP1kegChoQliSuGNK2Vq4aX8FofQkAjDmHkB1YwUgvSPDasVXQ4155m4yrlVgwVaQEktMFecQgz9%2BCCGyeISQ%2BTPWFLUJoFRpTjARLQAimpoxOkNIcE03RQ4ADq2jhzxogkyFgya6SYFMHUVAw5zzdFYpuWclTbA2B4EI9AbT46WPgDCJwux3D9KqYi4Zf9UWAImVGLF4Cig2KWeQUgbRhC%2BOwP4dArQo2wnhKgTgRgBRDFVfcW1mrMmrgyA4fxTLH4cthU20tLbf4ooAeM4BmLMgzKrH2gl3LCEkvIEgPEOBJhdIpVStlqCtXYK4PSm9xKmXdBhbSlpRL4HkECQsBo0ggA
+)!]
+
+---
+template: tplMainTop
+
+# Curiously Recurring Template Pattern (CRTP)
+
+## History
+
+- Conception of [__System F__](https://en.wikipedia.org/wiki/System_F), independently by Jean-Yves Girard and John C. Reynolds in 1972.
+  - System F is a second-order typed `$\lambda$`-calculus &rArr; strong theoretical fundations.
+- The technique of CRTP was formalized in 1989 as _F-bounded quantification_.
+- The name appeared in 1995 &rArr; quite recent, indeed.
+
+--
+
+## Concept
+
+```cpp
+template&lt;typename D&gt;
+struct Base
+{
+  D &amp;      get_ref()       { return static_cast&lt;D&amp;&gt;(*this); }
+  const D &amp;get_ref() const { return static_cast&lt;const D&amp;&gt;(*this); }
+
+  // ...
+};
+
+struct Derived : Base&lt;Derived&gt;
+{
+  // ...
+};
+```
+
+--
+
+## Uses?
+
+--
+
+- Second-order typing (type the types) e.g., for lazy evaluation.
+- Statically add a feature to a class (static inheritance) &rArr; concise code!
+
+---
+template: tplMainTop
+
+# CRTP Example: Lazy Evaluation
+
+Lazy evaluation consists in storing an expression instead of the result of the expression.
+
+Let's try to implement something like that. We have:
+- A list of leafs, in this example the elements of an algebra `$\mathcal{A}$` over the field of real numbers (approximated by double-precision floating point arithmetic).
+- A list of operations, for example for `$a, b \in \mathcal{A}$`:
+  - the sum, difference, product, division of two elements `$a, b \in \mathcal{A}$`
+  - an involution `$a^\star$` such that `$(a^\star)^{\star} = a$`
+
+.block[&rArr; e.g., the dual numbers, the split complex numbers, the quaternions, the square matrices, Lie algebras, are all example of real algebra.]
+
+---
+template: tplMainTop
+
+# CRTP Example: Lazy Evaluation
+
+```cpp
+/* The class Algebra is defined somewhere */
+struct Algebra { /* Definition of the algebra */ };
+
+/* We define a GlueAdd class to represent the addition of elements */
+struct GlueAdd
+{
+  const Algebra &amp;lhs;
+  const Algebra &amp;rhs;
+};
+
+// We overload the + operator to keep in mind the operation
+GlueAdd operator+(const Algebra &amp;lhs, const Algebra &amp;rhs)
+{
+  return {lhs, rhs};
+}
+```
+.alert.centering[Problem! We now want to add three values!]
+
+---
+template: tplMainTop
+
+# CRTP Example: Lazy Evaluation
+
+```cpp
+/* The class Algebra is defined somewhere */
+struct Algebra { /* Definition of the algebra */ };
+
+/* We define a GlueAdd class to represent the addition of elements */
+template&lt;typename LhsType, typename RhsType&gt;
+struct GlueAdd
+{
+  const LhsType &amp;lhs;
+  const RhsType &amp;rhs;
+};
+
+// We overload the + operator to keep in mind the operation
+GlueAdd&lt;Algebra, Algebra&gt;
+operator+(const Algebra &amp;lhs, const Algebra &amp;rhs)
+{
+  return {lhs, rhs};
+}
+GlueAdd&lt;GlueAdd&lt;Algebra, Algebra&gt;, Algebra&gt;
+operator+(const GlueAdd&lt;Algebra, Algebra&gt; &amp;lhs, const Algebra &amp;rhs)
+{
+  return {lhs, rhs};
+}
+GlueAdd&lt;Algebra, GlueAdd&lt;Algebra, Algebra&gt;&gt;
+operator+(const Algebra &amp;rhs, const GlueAdd&lt;Algebra, Algebra&gt; &amp;rhs)
+{
+  return {lhs, rhs};
+}
+```
+.alert.centering[Problem! Do we really want to add 4 elements?...!]
+
+---
+template: tplMainTop
+
+# CRTP Example: Lazy Evaluation
+
+```cpp
+/* The class Algebra is defined somewhere */
+struct Algebra { /* Definition of the algebra */ };
+
+/* We define a GlueAdd class to represent the addition of elements */
+template&lt;typename LhsType, typename RhsType&gt;
+struct GlueAdd
+{
+  const LhsType &amp;lhs;
+  const RhsType &amp;rhs;
+};
+
+// We overload the + operator to keep in mind the operation
+template&lt;typename LhsType, typename RhsType&gt;
+GlueAdd&lt;LhsType, RhsType&gt;
+operator+(const LhsType &amp;lhs, const RhsType &amp;rhs)
+{
+  return {lhs, rhs};
+}
+```
+.alert[
+Problems!
+1. We over-overload! The expression, e.g., `std::string("hello")+22` is now a GlueAdd!
+&rArr; Possible conflicts with other libraries, other overloads.
+1. We might want to have different overloads, e.g., for adding a scalar and an algebra element...
+]
+
+.block.centering[Solution: CRTP!]
+
+---
+template: tplMainTop
+
+# CRTP Example: Lazy Evaluation
+
+```cpp
+template&lt;typename D&gt;
+struct Expression
+{
+  D       &amp;get_ref()       { return static_cast&lt;D&amp;&gt;(*this); }
+  const D &amp;get_ref() const { return static_cast&lt;const D&amp;&gt;(*this); }
+  // ...
+};
+
+struct Algebra : Expression&lt;Algebra&gt; { /* Definition of the algebra */ };
+
+/* We define a GlueAdd class to represent the addition of elements */
+template&lt;typename LhsType, typename RhsType&gt;
+struct GlueAdd : Expression&lt;GlueAdd&lt;LhsType, RhsType&gt;&gt;
+{
+  GlueAdd(const Expression&lt;LhsType&gt; &amp;a_lhs, const Expression&lt;RhsType&gt; &amp;a_rhs)
+  : lhs(a_lhs.get_ref()), rhs(a_rhs.get_ref())
+  {}
+
+  const LhsType &amp;lhs;
+  const RhsType &amp;rhs;
+};
+
+// We overload the + operator to keep in mind the operation
+template&lt;typename LhsType, typename RhsType&gt;
+GlueAdd&lt;LhsType, RhsType&gt;
+operator+(const Expression&lt;LhsType&gt; &amp;lhs, const Expression&lt;RhsType&gt; &amp;rhs)
+{
+  return {lhs, rhs};
+}
+```
+
+---
+template: tplMainTop
+
+# CRTP Example: Lazy Evaluation
+
+```cpp
+template&lt;typename D&gt;
+struct Expression
+{
+  D       &amp;get_ref()       { return static_cast&lt;D&amp;&gt;(*this); }
+  const D &amp;get_ref() const { return static_cast&lt;const D&amp;&gt;(*this); }
+* // ... BONUS: We can add the involution to all expressions at once!
+};
+
+struct Algebra : Expression&lt;Algebra&gt; { /* Definition of the algebra */ };
+
+/* We define a GlueAdd class to represent the addition of elements */
+template&lt;typename LhsType, typename RhsType&gt;
+struct GlueAdd : Expression&lt;GlueAdd&lt;LhsType, RhsType&gt;&gt;
+{
+  GlueAdd(const Expression&lt;LhsType&gt; &amp;a_lhs, const Expression&lt;RhsType&gt; &amp;a_rhs)
+  : lhs(a_lhs.get_ref()), rhs(a_rhs.get_ref())
+  {}
+
+  const LhsType &amp;lhs;
+  const RhsType &amp;rhs;
+};
+
+// We overload the + operator to keep in mind the operation
+template&lt;typename LhsType, typename RhsType&gt;
+GlueAdd&lt;LhsType, RhsType&gt;
+operator+(const Expression&lt;LhsType&gt; &amp;lhs, const Expression&lt;RhsType&gt; &amp;rhs)
+{
+  return {lhs, rhs};
+}
+```
+
+---
+template: tplMainTop
+
+# CRTP Example: Lazy Evaluation
+
+```cpp
+template<typename Sub> struct GlueConj;
+template&lt;typename D&gt;
+struct Expression
+{
+  D       &amp;get_ref()       { return static_cast&lt;D&amp;&gt;(*this); }
+  const D &amp;get_ref() const { return static_cast&lt;const D&amp;&gt;(*this); }
+* GlueConj<D> conj() const { return {*this}; } // Available for all Expression types!!!
+};
+
+struct Algebra : Expression&lt;Algebra&gt; { /* Definition of the algebra */ };
+
+/* We define a GlueAdd class to represent the addition of elements */
+template&lt;typename LhsType, typename RhsType&gt;
+struct GlueAdd : Expression&lt;GlueAdd&lt;LhsType, RhsType&gt;&gt;
+{
+  GlueAdd(const Expression&lt;LhsType&gt; &amp;a_lhs, const Expression&lt;RhsType&gt; &amp;a_rhs)
+  : lhs(a_lhs.get_ref()), rhs(a_rhs.get_ref())
+  {}
+
+  const LhsType &amp;lhs;
+  const RhsType &amp;rhs;
+};
+
+// We overload the + operator to keep in mind the operation
+template&lt;typename LhsType, typename RhsType&gt;
+GlueAdd&lt;LhsType, RhsType&gt;
+operator+(const Expression&lt;LhsType&gt; &amp;lhs, const Expression&lt;RhsType&gt; &amp;rhs)
+{
+  return {lhs, rhs};
+}
+```
+.block.centering[Full code available [here](
+https://godbolt.org/#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZgQDbYB2AhgLbYgDkAjF%2BTXRMiAZVQtGIHgBYBQogFUAztgAKAD24AGfgCsQAJnL0WTUKgCkBgEJXr5AA6nsAOXacuAYTt2A1ABVsNgcTImxfAFlsIhZVUnRQXwAZAiUiJV8LAFZrJVJLLIARfhVGVCICIWpmTE90egBXNiYQaS1yGpSmVyaAI2xSVsd0JWJKpjrG5tb2hxGxoS6etn7B2VLscvGRGNIiSaaWnnINraEdlj2llz6BobTL/frDqRPdomvbtYBKE/QG/IeKwAZgITFQjRwmWBnjSpDBwAswNwFi0AEEQWCIQ0oUjPJU4dh2EiUejUWiwsFQtg8UQAJ4OZjuXwiBq9Em%2BOENcq%2BADijWwdSYuiRtnRlJCLDCtIZTI4ySQSn8svIvnpjNY8oASorlYyOVyefyGtg0ZhMKLyRLqTKNczCiTyYaiL5cOoHKRsEpRkJyRYAOxitG%2BXyFEPhkNWABswGiAH1PTQIN8I%2BGA9ZfJ6iACmJyYhVUHHxGk8Q6DFGSRAAFREJCpb6izL%2Bh3okMYJhpUOZcuxogJ7BJlPtzvpzPRHN5qUEQvFoh44cussV5HV2v1xsBlvBvkCoUimEO5G%2Bdu6ZPHoQjwNj7OkXPpmt1pSbjfNv2v4FBp1EUjcl1o%2Bixr0pAsL4ICuu6nreuMeL/oBwGOmSgbkiGsHYEBLAQAueaYCAIBwgi3ZRiwcaatgKZgaREDEaRKbps%2Bra%2BAA9FWoYDmCCy5ugNBqkg4QSHBIFVoxyHYbh%2BFmL4pGWohh6fuKQSStKMLqnK4SsuyyJfj%2BRq7kIuigeBHpej6TB4sagp6Xi6mOppiFBiG5l7phF4um6RlQb6MLWUe0bEUobLkZybJUXG/m9AAdL2/aDrRSGvgxWHqUFGmfu%2BQbMb4ADq4Q4HQ3S%2BCB5lmpgx4mN6aroGO7nMC6tZ8eaHG%2BFxvjYIwHDCBkQlWgpNrKbKpEKkqKpqv1zI6kN%2Bq2Wizo7iaxUGW5kEmWZArFXiSS6sN416jSmlTXRDFFeazkdq5EHGdBMIbRNu24IRxH0IqqpYYtF2eZ422yhyvkJoqDYMWBj1KCFQORfGibJr8maKiFpCKmDfYQ98sW2PF25YddO2%2BED0noy5vifYy0NPh%2Bb6yX66KMYxWXhOgABuAz0OgLAlXV3YZugjLASQpAVb4ADW2DYA4vhgr4bBgqzvFNVzU6%2BvJVJSrtngqQNmPDarY2bZNpJokdFpXdr2CqoTt3kpzAxSmQdgnZ2r0eaZhs3d95ZA89%2BP28tMKmy7UZw0o/0YkhDFZhO6Zu8Tz6kzJFMUj1Su2qphmkAh03fr%2BAToDs8JmLj3WK0pKujfK6uMqqmvakbqczf4WffgiK1zea61GybVd7brB3bg8Bbnqdol4fXEntgzey2y6%2BstzdbfOz55bEdgEGB5GwfbiGoe3t2BgQFYBgiRGfi19nDdOztJK4SPAxECFi8euFQPL6mfi7w2Ng7wYe8MQfNiZ8fufe%2B3XAF8hCj2vgvCC4V/aP2/rYD%2Br897R23PRIO5MyQK0UsrCuak2TV3TjyI%2BQ9EQwkcpZLyOCO5vnspOXuWE0g4UHjnYAfdQHj1mhZYUVlyF3R%2BrfUgj8u4Rg3neD%2B79P5rzTD/AhjDOEaSAWgEBV8b4QLCtAiRGYX7hRPMmXeuMV5bijnJOOBdla4O0i6KRJ9PCoXQqnAR1Dpx907HQsShDmGKKwtY4C904y8P4avQR45N7gLvlJRBeiyZ53Qb1Iudp5SLVwfQ8STCSChUIawxa3jfGUJEkI3%2BhC8TxORMApgLDgl8LzmjckYIXRsBYGCCAdN0AEEwIHOxKEAJoS8SwOiH9ukf03KqdkSEP7sn6c2Z6PSDCWDGag8Rzj5ENBdHiPEFVUmMKorRGEKz5k1HoLo8M8yMCLOhN4GEqyklUTsL0TZpzPAD12fskMhz/hLK2WclJFzLk2FGdYVAmi9KQ3%2BcKSGJztlEHoQ8sJ4ZclaAqcUX49BuBZH4C0LgOhyDoG4N4Gwh945hEiNEWI8REgpDSBkbIuR8jZGKOQIg2guDI3IPzEAWR2iIq4NIFF9KMXcBKCAdodK0UMvIHAWAKAMDBAYAMSg1AJUOClYMYAPAshGDoPQMIpAlDUF6Ny3oYJLh0m4HwcgerWCkDpAAeV6LoTYgrjUSvakQC1TB6CGqFeQHAvQGjAE8BIegWreD8BwLUswkh3WEE9FsBmAb0WL02IsjwxrqmtW5fQAg6FzV1BwNy%2BubAjX8FHr0EY2BChBFMMANNZh6W/BoCYYASgABqBBsAAHcLUanzXIYQYgJCcBkF2xQKgNDcv0EYEwVbpmwPsGm3oWrIC/E5hUC8vKMWj3hDgOdyZHDODcBwLFPhJF4vCFEGIcQEhgVJekTIOQWBKDYNSkorVbXjGqEwWozxpjHE6GCZYqxXhzFGEuiYH6jjDEA%2BMT4Kw7jHFOEBi4ewDifpOE%2Bs4TB4MfB/TcKDgwYPvEQ6Bh4VxMNfCkL8JQ/xASGARUirl7rMVeAPRmQIxiCWnuJRe1IV6KW3vvUUfggqdCMuZay4w3BOXkFRei%2BjfKBXVuo1wAw/A80ick/waTtLq0isQBAFAcbUCLLIDKqipB62qGcPQEQSB0AttRfa9AkrQjjDM90CzVmbPcrlQqkASqVXkE84wUgu6PD8H8wMC1izLPWdUx0dQmw0QmYDfwPTOxCCov4IIbt4hJD9oy4OtQmh3WjuMOWtAjHjDps3QuhwQGA0AFpMp%2Bt8PVxe34QL1cZJgUwvdasWuBGptdzSvTwF%2BE4boQX904sPSxk9RLz3JE4%2BSnIcaH3kB/MIAgHBa71Eq38AEqBOBGDoWCZzrVIvucDeQFtwEHD5vk8iiT3L6PYqnQEI9rHZskoW9e6wy2%2BMaaFYy3iLM7hbvZeJ5T7Rovqa1bJgH8m%2BsPboyugTDLfijxMq0IAA
+)]
+
+
+
+    </textarea>
+    <script src="../javascript/remark.min.js"></script>
+    <script src="../javascript/katex.min.js"></script>
+    <script src="../javascript/auto-render.min.js"></script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai',
+        countIncrementalSlides: false,
+        highlightLines: true,
+        highlightSpans: false
+      });
+
+      // KaTex rendering
+      renderMathInElement(
+              document.body,
+              {
+                      delimiters: [
+                              {left: "$$", right: "$$", display: true},
+                              {left: "$", right: "$", display: false},
+                              {left: "\\(", right: "\\)", display: false}],
+                      ignoredTags: []
+              });
+    </script>
+  </body>
+</html>
