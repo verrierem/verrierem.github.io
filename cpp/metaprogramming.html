@@ -432,6 +432,64 @@ https://godbolt.org/#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZgQDbYB2AhgLbYg
 ---
 template: tplMainTop
 
+# First Edition of the World Championship of TMP!
+
+## Rules
+
+1. Each questions give a specific amount of points.
+1. Getting all the points to a question requires a purely compile-time calculation (besides `to_string`).
+1. The first student to raise the hand gets an attempt to answer the question in front of everyone.
+1. Warnings at compilation remove 1 point.
+1. You can democratically decide to get a hint. Each such hint costs one point.
+1. Another student correcting the warning gets 2 points.
+1. The original student correcting the warning gets back the lost point.
+1. The student with the highest amount of point gets the prize!!
+1. All the answers have to be compatible with C++11.
+1. No header can be included besides the ones already in the file.
+1. In addition to the fantastic prize:
+  - the two first students get 2 bonus points on the project,
+  - the third student get 1 bonus point on the project.
+1. Go Go Go!!!
+
+.block.centering[[Initial source file]()]
+
+---
+template: tplMainTop
+
+# First Edition of the World Championship of TMP!
+
+1. [1 points] Determine the template `Stack` of a compile-time stack.
+1. [2 points] Implement the traits `head` and `tail` that gives the head and the tail of the stack. Compilation error if the stack is empty.
+1. [4 points] Implement the method `to_string` that generate the string representation of the stack (partially runtime).
+1. [3 points] Implement the trait `length` that computes the number of elements in the stack.
+1. [3 points] Implement the trait `accumulate` that computes the sum of all the elements in the stack.
+1. [5 points] Indeed, the length and the sum of a stack are a special case of a more general operation:
+*fold-left*. The fold-left operation applying a function
+`$f: X\times \mathbb{Z}\longrightarrow X$`
+on a stack
+`$(x_1, (\cdots, (x_n)\cdots))$`
+with initial element `$i$` is defined as 
+`$$
+\mathrm{fold\_left}[f, i, (x_1, (x_2, \cdots (x_n)\cdots))] = f(\cdots f(f(i, x_1), x_2) \cdots, x_n)\,.
+$$`
+Implement this operation.
+1. [5 points] Similarly, we have the fold-right operation defined as
+`$$
+\mathrm{fold\_right}[f, i, (x_1, (x_2, \cdots (x_n) \cdots ))] = f(x_1, f(x_2, \cdots f(x_n, i)\cdots))\,.
+$$`
+Implement this operation.
+1. [4 points] Implement a trait `factorial` that returns the stack of the factorials:
+`$$
+\mathrm{factorial}\!\!<\!\!n\!\!> = (n!,\cdots(0!)\cdots)\,.
+$$`
+1. [6 points] Implement a trait `reverse` that reverses the elements in a stack:
+`$$
+\mathrm{reverse}\!\!<\!\!(x_1, (x_2, \cdots(x_n)\cdots))\!\!> = (x_n, (x_{n-1}, \cdots(x_1)\cdots))\,.
+$$`
+
+---
+template: tplMainTop
+
 # Curiously Recurring Template Pattern (CRTP)
 
 ## History
